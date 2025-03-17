@@ -19,6 +19,8 @@ import java.util.List;
 public class ProjectController {
     private final ProjectService projectService;
     private final JwtProvider jwtProvider;
+    
+    //커밋테스트 나중에 지울것
 
     //유저 프로젝트 조회(전체)
     @GetMapping("/searchAll")
