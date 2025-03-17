@@ -24,17 +24,13 @@ public class ProjectController {
 
     //유저 프로젝트 조회(전체)
     @GetMapping("/searchAll")
-    public ResponseEntity<List<ProjectResponse>> getProjects(@PathVariable Long projectId, @RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<List<ProjectResponse>> getProjects(@RequestHeader("Authorization") String authorization) {
         try {
-            String token = authorization.substring(7);  // "Bearer "를 제거하여 토큰만 추출
+            String token = authorization.substring(7);  // "Bearer " 제거
 
             Long userId = jwtProvider.getUserIdFromToken(token);
 
-            boolean projectUserCheck = projectService.projectUserCheck(userId, projectId);
-
-            if (!projectUserCheck) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-            }
+            // 사용자가 속한 프로젝트 목록 조회
             List<ProjectResponse> projects = projectService.getProjects(userId);
 
             return ResponseEntity.ok(projects);
