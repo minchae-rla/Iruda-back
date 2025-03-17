@@ -20,7 +20,7 @@ public class ProjectController {
     private final ProjectService projectService;
     private final JwtProvider jwtProvider;
     
-    //커밋테스트 나중에 지울것
+    //커밋테스트 나중에
 
     //유저 프로젝트 조회(전체)
     @GetMapping("/searchAll")
