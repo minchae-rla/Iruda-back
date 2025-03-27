@@ -1,5 +1,6 @@
 package com.example.iruda.projects;
 
+import com.example.iruda.users.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name="project_members")
+@Table(name="projectMembers")
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProjectMember {
@@ -18,12 +19,19 @@ public class ProjectMember {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
-    private Project projectId;
+    private Project project;
 
-    @Column(nullable = false)
-    private String memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private ProjectPosition projectPosition;
+    private ProjectPosition projectPosition;  // 역할
+
+    public ProjectMember(Project project, User user, ProjectPosition projectPosition) {
+        this.project = project;
+        this.user = user;
+        this.projectPosition = projectPosition;
+    }
 }

@@ -1,10 +1,13 @@
 package com.example.iruda.users;
 
+import com.example.iruda.projects.ProjectMember;
 import com.example.iruda.users.dto.UserRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,10 +29,10 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable =false)
+    @Column(nullable = false)
     private String phone;
 
-    @Column(nullable =false)
+    @Column(nullable = false)
     private String department;
 
     @Column
@@ -37,6 +40,9 @@ public class User {
 
     @Column
     private String providerId;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProjectMember> projectMembers;
 
     public User(UserRequest userRequest, String encryptedPassword) {
         this.userId = userRequest.userId();
@@ -48,3 +54,4 @@ public class User {
         this.providerId = userRequest.providerId();
     }
 }
+

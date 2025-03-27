@@ -7,9 +7,6 @@ public record ProjectResponse(
         String name
 ) {
     public static ProjectResponse fromEntity(Project project) {
-        return new ProjectResponse(
-                project.getId(),
-                project.getName()
-        );
+        return new ProjectResponse(project.getId(), project.getName());
     }
 }

@@ -39,6 +39,7 @@ public class SecurityConfig {
                                         "/api/users/login",
                                         "/api/projects/add",
                                         "/api/projects/searchAll",
+                                        "/api/projects/addTask/**",
                                         "/api/projects/search/**",
                                         "/api/projects/delete/**",
                                         "/api/projects/update/**").permitAll()
