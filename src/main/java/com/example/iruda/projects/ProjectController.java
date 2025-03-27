@@ -59,7 +59,7 @@ public class ProjectController {
             }
             projectService.addTask(projectDetailRequest, projectId);
 
-            return ResponseEntity.ok("일정이 성공적으로 삭제되었습니다.");
+            return ResponseEntity.ok("일정이 성공적으로 추가되었습니다.");
 
         } catch (ExpiredJwtException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");

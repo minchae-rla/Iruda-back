@@ -19,9 +19,8 @@ public class ProjectDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // PrimaryKey로 설정
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
-    private Project projectId;  // 프로젝트 ID
+    private Long projectId;  // 프로젝트 ID
 
     @Column(nullable = false)
     private String title;
@@ -44,8 +43,8 @@ public class ProjectDetail {
     @Column(nullable = false)
     private String alarmSet;
 
-    // ProjectDetailRequest에서 데이터를 받아와 객체 생성
-    public ProjectDetail(ProjectDetailRequest projectDetailRequest) {
+    public ProjectDetail(ProjectDetailRequest projectDetailRequest, Long projectId) {
+        this.projectId = projectDetailRequest.projectId();
         this.title = projectDetailRequest.title();
         this.content = projectDetailRequest.content();
         this.startDate = projectDetailRequest.startDate();
@@ -55,8 +54,5 @@ public class ProjectDetail {
         this.updateDate = new Date();
     }
 
-    public void setProjectId(Project projectId) {
-        this.projectId = projectId;
-    }
 }
 

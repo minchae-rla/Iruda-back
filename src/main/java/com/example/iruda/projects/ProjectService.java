@@ -16,7 +16,7 @@ import java.util.List;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
-    private final ProjectMemberRepository projectDetailRepository;
+    private final ProjectDetailRepository projectDetailRepository;
     private final UserRepository userRepository;
 
     //프로젝트 생성
@@ -45,7 +45,7 @@ public class ProjectService {
 
     // 프로젝트 상세 일정 추가
     public void addTask(ProjectDetailRequest projectDetailRequest, Long projectId) {
-        ProjectDetail projectDetail = new ProjectDetail(projectDetailRequest);
+        ProjectDetail projectDetail = new ProjectDetail(projectDetailRequest, projectId);
 
         projectDetailRepository.save(projectDetail);
     }
@@ -53,15 +53,19 @@ public class ProjectService {
 
     //프로젝트 삭제
     public void deleteProject(Long projectId) {
+        projectRepository.deleteById(projectId);
         projectMemberRepository.deleteById(projectId);
+        projectDetailRepository.deleteById(projectId);
     }
 
     //프로젝트 수정
     public void updateProject(Long projectId, ProjectRequest projectRequest) {
-//        Project project = projectMemberRepository.findByUserId(projectId)
-//                .orElseThrow(() -> new IllegalArgumentException("Project not found with id: " + projectId));
-//        project.update(projectRequest);
-//        projectRepository.save(project);
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new IllegalArgumentException("Project not found with id: " + projectId));
+
+        project.update(projectRequest);
+
+        projectRepository.save(project);
     }
 
     // 본인 프로젝트 확인
