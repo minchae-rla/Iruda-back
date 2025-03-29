@@ -38,11 +38,14 @@ public class SecurityConfig {
                                         "/api/users/signup",
                                         "/api/users/login",
                                         "/api/projects/add",
-                                        "/api/projects/searchAll",
+                                        "/api/projects/getProject",
                                         "/api/projects/addTask/**",
                                         "/api/projects/search/**",
                                         "/api/projects/delete/**",
-                                        "/api/projects/update/**").permitAll()
+                                        "/api/projects/update/**",
+                                        "/api/projects/deleteTask/**",
+                                        "api/projects/updateTask/**",
+                                        "api/projects/getTask/**").permitAll()
                                 .anyRequest().authenticated()
 
                 );

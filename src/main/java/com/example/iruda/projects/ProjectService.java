@@ -2,6 +2,7 @@ package com.example.iruda.projects;
 
 import com.example.iruda.jwt.JwtProvider;
 import com.example.iruda.projects.dto.ProjectDetailRequest;
+import com.example.iruda.projects.dto.ProjectDetailResponse;
 import com.example.iruda.projects.dto.ProjectRequest;
 import com.example.iruda.projects.dto.ProjectResponse;
 import com.example.iruda.users.User;
@@ -19,11 +20,11 @@ public class ProjectService {
     private final ProjectDetailRepository projectDetailRepository;
     private final UserRepository userRepository;
 
-    //프로젝트 생성
+    // 프로젝트 생성
     public void addProject(ProjectRequest projectRequest, Long userId) {
         //회원이 존재하는 확인
         User user = userRepository.findById(userId).orElse(null);
-        
+
         //프로젝트 테이블에 프로젝트명만 저장
         Project project = new Project(projectRequest);
         projectRepository.save(project);
@@ -34,12 +35,19 @@ public class ProjectService {
     }
 
 
-    //프로젝트 조회
+    // 프로젝트 조회
     public List<ProjectResponse> getProjects(Long userId) {
         // ProjectMember에서 프로젝트를 가져와서 ProjectResponse로 변환
         return projectMemberRepository.findByUserId(userId).stream()
                 .map(projectMember -> new ProjectResponse(projectMember.getProject().getId(), projectMember.getProject().getName()))
                 .toList();
+    }
+
+    // 일정 조회
+    public ProjectDetailResponse getTask(Long taskId) {
+        return projectDetailRepository.findById(taskId)
+                .map(ProjectDetailResponse::fromEntity)
+                .orElse(null);
     }
 
 
@@ -51,21 +59,36 @@ public class ProjectService {
     }
 
 
-    //프로젝트 삭제
+    // 프로젝트 삭제
     public void deleteProject(Long projectId) {
         projectRepository.deleteById(projectId);
         projectMemberRepository.deleteById(projectId);
         projectDetailRepository.deleteById(projectId);
     }
 
-    //프로젝트 수정
+    // 일정 삭제
+    public void deleteTask(Long taskId) {
+        projectDetailRepository.deleteById(taskId);
+    }
+
+    // 프로젝트 제목 수정
     public void updateProject(Long projectId, ProjectRequest projectRequest) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new IllegalArgumentException("Project not found with id: " + projectId));
+                .orElseThrow(() -> new IllegalArgumentException("Project not found"));
 
         project.update(projectRequest);
 
         projectRepository.save(project);
+    }
+
+    // 일정 수정
+    public void updateTask(Long taskId, ProjectDetailRequest projectDetailRequest) {
+        ProjectDetail projectDetail = projectDetailRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Task Not found"));
+
+        projectDetail.update(projectDetailRequest);
+
+        projectDetailRepository.save(projectDetail);
     }
 
     // 본인 프로젝트 확인
@@ -74,5 +97,12 @@ public class ProjectService {
 
         return projectMembers.stream()
                 .anyMatch(projectMember -> projectMember.getProject().getId().equals(projectId));
+    }
+
+    // 일정pk로 프로젝트pk 찾기
+    public Long taskCheck(Long taskId) {
+        return projectDetailRepository.findById(taskId)
+                .map(ProjectDetail::getProjectId)
+                .orElse(null);
     }
 }

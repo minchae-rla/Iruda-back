@@ -54,5 +54,14 @@ public class ProjectDetail {
         this.updateDate = new Date();
     }
 
+    public void update(ProjectDetailRequest projectDetailRequest) {
+        this.projectId = projectDetailRequest.projectId();
+        this.title = projectDetailRequest.title();
+        this.content = projectDetailRequest.content();
+        this.startDate = projectDetailRequest.startDate();
+        this.endDate = projectDetailRequest.endDate();
+        this.alarmSet = projectDetailRequest.alarmSet();
+        this.updateDate = new Date();
+    }
 }
 
