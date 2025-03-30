@@ -45,7 +45,8 @@ public class SecurityConfig {
                                         "/api/projects/update/**",
                                         "/api/projects/deleteTask/**",
                                         "api/projects/updateTask/**",
-                                        "api/projects/getTask/**").permitAll()
+                                        "api/projects/getTask/**",
+                                        "api/projects/inviteUser/**").permitAll()
                                 .anyRequest().authenticated()
 
                 );

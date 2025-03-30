@@ -105,4 +105,18 @@ public class ProjectService {
                 .map(ProjectDetail::getProjectId)
                 .orElse(null);
     }
+    
+    
+    //프로젝트에 유저 초대
+    public void inviteUser(Long projectId, ProjectRequest projectRequest) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("프로젝트를 찾을 수 없습니다."));
+
+        Long userId = projectRequest.userId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다."));
+
+        ProjectMember projectMember = new ProjectMember(project, user, ProjectPosition.TM);  // 역할(TM) 설정
+        projectMemberRepository.save(projectMember);
+    }
 }

@@ -224,6 +224,32 @@ public class ProjectController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
         }
 
+    }
+
+    //프로젝트 팀원 추가
+    @PostMapping("/inviteUser/{projectId}")
+    public ResponseEntity<String> inviteUser(@PathVariable Long projectId, @RequestHeader("Authorization") String authorization, @RequestBody ProjectRequest projectRequest) {
+        try {
+            String token = authorization.substring(7);
+
+            Long userId = jwtProvider.getUserIdFromToken(token);
+
+            boolean projectUserCheck = projectService.projectUserCheck(userId, projectId);
+            if (!projectUserCheck) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("팀원을 초대할 권한이 없습니다.");
+            }
+            projectService.inviteUser(projectId, projectRequest);
+
+            return ResponseEntity.ok("팀원이 성공적으로 추가되었습니다.");
+            
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
+        } catch (JwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 토큰입니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
+        }
 
     }
+
 }
