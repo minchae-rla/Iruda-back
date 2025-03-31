@@ -130,7 +130,9 @@ public class ProjectController {
             Long userId = jwtProvider.getUserIdFromToken(token);
 
             boolean projectUserCheck = projectService.projectUserCheck(userId, projectId);
-            if (!projectUserCheck) {
+
+            boolean leaderCheck = projectService.leaderCheck(userId, projectId);
+            if (!projectUserCheck && !leaderCheck) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이 프로젝트를 삭제할 권한이 없습니다.");
             }
             projectService.deleteProject(projectId);

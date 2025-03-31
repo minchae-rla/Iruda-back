@@ -99,6 +99,13 @@ public class ProjectService {
                 .anyMatch(projectMember -> projectMember.getProject().getId().equals(projectId));
     }
 
+    // 프로젝트 TL 확인
+    public boolean leaderCheck(Long userId, Long projectId) {
+        ProjectMember projectMember = projectMemberRepository.findByUserIdAndProjectId(userId, projectId);
+
+        return projectMember.getProjectPosition() == ProjectPosition.TL;
+    }
+
     // 일정pk로 프로젝트pk 찾기
     public Long taskCheck(Long taskId) {
         return projectDetailRepository.findById(taskId)

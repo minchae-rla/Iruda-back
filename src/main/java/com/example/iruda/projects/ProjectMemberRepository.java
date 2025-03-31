@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface ProjectMemberRepository extends JpaRepository<ProjectMember, Long> {
     List<ProjectMember> findByUserId(Long userId);
+
+    ProjectMember findByUserIdAndProjectId(Long userId, Long projectId);
 }
