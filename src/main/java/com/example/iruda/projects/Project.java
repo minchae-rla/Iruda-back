@@ -26,6 +26,9 @@ public class Project {
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProjectMember> projectMembers;
 
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProjectDetail> projectDetails;
+
     public Project(ProjectRequest projectRequest) {
         this.name = projectRequest.name();
     }

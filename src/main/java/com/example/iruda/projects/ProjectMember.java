@@ -18,11 +18,11 @@ public class ProjectMember {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
+    @JoinColumn(name = "project_Id", nullable = false)
     private Project project;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_Id", nullable = false)
     private User user;
 
     @Column(nullable = false)

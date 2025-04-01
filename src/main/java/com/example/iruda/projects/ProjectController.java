@@ -121,7 +121,7 @@ public class ProjectController {
     }
 
 
-    // 프로젝트 전체 삭제
+    // 프로젝트 삭제
     @DeleteMapping("/delete/{projectId}")
     public ResponseEntity<String> deleteProject(@PathVariable Long projectId, @RequestHeader("Authorization") String authorization) {
         try {
@@ -130,8 +130,8 @@ public class ProjectController {
             Long userId = jwtProvider.getUserIdFromToken(token);
 
             boolean projectUserCheck = projectService.projectUserCheck(userId, projectId);
-
             boolean leaderCheck = projectService.leaderCheck(userId, projectId);
+
             if (!projectUserCheck && !leaderCheck) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이 프로젝트를 삭제할 권한이 없습니다.");
             }

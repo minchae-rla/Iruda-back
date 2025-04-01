@@ -1,6 +1,7 @@
 package com.example.iruda.projects;
 
 import com.example.iruda.projects.dto.ProjectDetailRequest;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,11 +17,12 @@ import java.util.Date;
 public class ProjectDetail {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // PrimaryKey로 설정
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "project_id", nullable = false)
-    private Long projectId;  // 프로젝트 ID
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_Id", nullable = false)
+    private Project project;
 
     @Column(nullable = false)
     private String title;
@@ -29,22 +31,27 @@ public class ProjectDetail {
     private String content;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createDate;
 
     @Column(nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updateDate;
 
     @Column(nullable = false)
     private String alarmSet;
 
-    public ProjectDetail(ProjectDetailRequest projectDetailRequest, Long projectId) {
-        this.projectId = projectDetailRequest.projectId();
+    // 기존 constructor에서 projectId가 아니라 Project 객체를 받도록 수정
+    public ProjectDetail(ProjectDetailRequest projectDetailRequest, Project project) {
+        this.project = project;
         this.title = projectDetailRequest.title();
         this.content = projectDetailRequest.content();
         this.startDate = projectDetailRequest.startDate();
@@ -55,7 +62,7 @@ public class ProjectDetail {
     }
 
     public void update(ProjectDetailRequest projectDetailRequest) {
-        this.projectId = projectDetailRequest.projectId();
+        this.project = project;
         this.title = projectDetailRequest.title();
         this.content = projectDetailRequest.content();
         this.startDate = projectDetailRequest.startDate();
@@ -64,4 +71,3 @@ public class ProjectDetail {
         this.updateDate = new Date();
     }
 }
-

@@ -37,11 +37,15 @@ public class ProjectService {
 
     // 프로젝트 조회
     public List<ProjectResponse> getProjects(Long userId) {
-        // ProjectMember에서 프로젝트를 가져와서 ProjectResponse로 변환
-        return projectMemberRepository.findByUserId(userId).stream()
-                .map(projectMember -> new ProjectResponse(projectMember.getProject().getId(), projectMember.getProject().getName()))
+        List<ProjectMember> projectMembers = projectMemberRepository.findByUserId(userId);
+
+        return projectMembers.stream()
+                .map(ProjectMember::getProject)
+                .distinct()
+                .map(project -> new ProjectResponse(project.getId(), project.getName()))  // ProjectResponse로 변환
                 .toList();
     }
+
 
     // 일정 조회
     public ProjectDetailResponse getTask(Long taskId) {
@@ -51,9 +55,9 @@ public class ProjectService {
     }
 
 
-    // 프로젝트 상세 일정 추가
-    public void addTask(ProjectDetailRequest projectDetailRequest, Long projectId) {
-        ProjectDetail projectDetail = new ProjectDetail(projectDetailRequest, projectId);
+    // 일정 추가
+    public void addTask(ProjectDetailRequest projectDetailRequest) {
+        ProjectDetail projectDetail = new ProjectDetail(projectDetailRequest);
 
         projectDetailRepository.save(projectDetail);
     }
@@ -61,9 +65,14 @@ public class ProjectService {
 
     // 프로젝트 삭제
     public void deleteProject(Long projectId) {
-        projectRepository.deleteById(projectId);
-        projectMemberRepository.deleteById(projectId);
-        projectDetailRepository.deleteById(projectId);
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("프로젝트를 찾을 수 없습니다."));
+
+        projectMemberRepository.deleteByProjectId(projectId);
+
+        projectDetailRepository.deleteByProjectId(projectId);
+
+        projectRepository.delete(project);
     }
 
     // 일정 삭제
@@ -93,10 +102,9 @@ public class ProjectService {
 
     // 본인 프로젝트 확인
     public boolean projectUserCheck(Long userId, Long projectId) {
-        List<ProjectMember> projectMembers = projectMemberRepository.findByUserId(userId);
+        ProjectMember projectMember = projectMemberRepository.findByUserIdAndProjectId(userId, projectId);
 
-        return projectMembers.stream()
-                .anyMatch(projectMember -> projectMember.getProject().getId().equals(projectId));
+        return projectMember != null;
     }
 
     // 프로젝트 TL 확인
@@ -109,7 +117,7 @@ public class ProjectService {
     // 일정pk로 프로젝트pk 찾기
     public Long taskCheck(Long taskId) {
         return projectDetailRepository.findById(taskId)
-                .map(ProjectDetail::getProjectId)
+                .map(projectDetail -> projectDetail.getProject().getId())
                 .orElse(null);
     }
     
