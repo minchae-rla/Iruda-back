@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -40,9 +41,17 @@ public class ProjectService {
         List<ProjectMember> projectMembers = projectMemberRepository.findByUserId(userId);
 
         return projectMembers.stream()
-                .map(ProjectMember::getProject)
+                .map(ProjectMember::getProjectId)
                 .distinct()
-                .map(project -> new ProjectResponse(project.getId(), project.getName()))  // ProjectResponse로 변환
+                .map(projectId -> {
+                    Project project = projectRepository.findById(projectId).orElse(null);
+                    if (project != null) {
+                        return new ProjectResponse(project.getId(), project.getName());
+                    } else {
+                        return null;
+                    }
+                })
+                .filter(Objects::nonNull)  // null 제거
                 .toList();
     }
 
@@ -117,7 +126,7 @@ public class ProjectService {
     // 일정pk로 프로젝트pk 찾기
     public Long taskCheck(Long taskId) {
         return projectDetailRepository.findById(taskId)
-                .map(projectDetail -> projectDetail.getProject().getId())
+                .map(ProjectDetail::getProjectId)
                 .orElse(null);
     }
     

@@ -58,7 +58,7 @@ public class ProjectController {
             if (!projectUserCheck) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이 일정을 추가할 권한이 없습니다.");
             }
-            projectService.addTask(projectDetailRequest, projectId);
+            projectService.addTask(projectDetailRequest);
 
             return ResponseEntity.ok("일정이 성공적으로 추가되었습니다.");
 

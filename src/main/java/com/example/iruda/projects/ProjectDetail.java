@@ -20,9 +20,8 @@ public class ProjectDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_Id", nullable = false)
-    private Project project;
+    private Long projectId;
 
     @Column(nullable = false)
     private String title;
@@ -48,10 +47,9 @@ public class ProjectDetail {
 
     @Column(nullable = false)
     private String alarmSet;
-
-    // 기존 constructor에서 projectId가 아니라 Project 객체를 받도록 수정
-    public ProjectDetail(ProjectDetailRequest projectDetailRequest, Project project) {
-        this.project = project;
+    
+    public ProjectDetail(ProjectDetailRequest projectDetailRequest) {
+        this.projectId = projectDetailRequest.projectId();
         this.title = projectDetailRequest.title();
         this.content = projectDetailRequest.content();
         this.startDate = projectDetailRequest.startDate();
@@ -61,8 +59,9 @@ public class ProjectDetail {
         this.updateDate = new Date();
     }
 
+
     public void update(ProjectDetailRequest projectDetailRequest) {
-        this.project = project;
+        this.projectId = projectDetailRequest.projectId();
         this.title = projectDetailRequest.title();
         this.content = projectDetailRequest.content();
         this.startDate = projectDetailRequest.startDate();
