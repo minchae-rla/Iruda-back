@@ -148,4 +148,6 @@ public class ProjectService {
         ProjectMember projectMember = new ProjectMember(project, user, ProjectPosition.TM);  // 역할(TM) 설정
         projectMemberRepository.save(projectMember);
     }
+    
+    
 }
