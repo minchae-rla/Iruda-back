@@ -20,8 +20,9 @@ public class ProjectDetail {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_Id", nullable = false)
-    private Long projectId;
+    private Project project;
 
     @Column(nullable = false)
     private String title;
@@ -48,8 +49,8 @@ public class ProjectDetail {
     @Column(nullable = false)
     private String alarmSet;
     
-    public ProjectDetail(ProjectDetailRequest projectDetailRequest) {
-        this.projectId = projectDetailRequest.projectId();
+    public ProjectDetail(ProjectDetailRequest projectDetailRequest, Project project) {
+        this.project = project;
         this.title = projectDetailRequest.title();
         this.content = projectDetailRequest.content();
         this.startDate = projectDetailRequest.startDate();
@@ -60,8 +61,8 @@ public class ProjectDetail {
     }
 
 
-    public void update(ProjectDetailRequest projectDetailRequest) {
-        this.projectId = projectDetailRequest.projectId();
+    public void update(ProjectDetailRequest projectDetailRequest, Project project) {
+        this.project = project;
         this.title = projectDetailRequest.title();
         this.content = projectDetailRequest.content();
         this.startDate = projectDetailRequest.startDate();

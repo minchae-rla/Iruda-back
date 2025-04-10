@@ -36,15 +36,14 @@ public class ProjectService {
     }
 
 
-    // 프로젝트 조회
+    // 프로젝트 조회 수정
     public List<ProjectResponse> getProjects(Long userId) {
         List<ProjectMember> projectMembers = projectMemberRepository.findByUserId(userId);
 
         return projectMembers.stream()
-                .map(ProjectMember::getProjectId)
+                .map(ProjectMember::getProject)  // getProject()로 Project 객체 가져오기
                 .distinct()
-                .map(projectId -> {
-                    Project project = projectRepository.findById(projectId).orElse(null);
+                .map(project -> {
                     if (project != null) {
                         return new ProjectResponse(project.getId(), project.getName());
                     } else {
@@ -65,10 +64,12 @@ public class ProjectService {
 
 
     // 일정 추가
-    public void addTask(ProjectDetailRequest projectDetailRequest) {
-        ProjectDetail projectDetail = new ProjectDetail(projectDetailRequest);
+    public void addTask(ProjectDetailRequest request) {
+        Project project = projectRepository.findById(request.projectId())
+                .orElseThrow(() -> new IllegalArgumentException("Project not found"));
 
-        projectDetailRepository.save(projectDetail);
+        ProjectDetail detail = new ProjectDetail(request, project);
+        projectDetailRepository.save(detail);
     }
 
 
@@ -77,9 +78,11 @@ public class ProjectService {
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("프로젝트를 찾을 수 없습니다."));
 
-//        projectMemberRepository.deleteByProjectId(projectId);
+        List<ProjectMember> projectMembers = projectMemberRepository.findAllByProjectId(projectId);
+        projectMemberRepository.deleteAll(projectMembers);
 
-//        projectDetailRepository.deleteByProjectId(projectId);
+        List<ProjectDetail> projectDetails = projectDetailRepository.findAllByProjectId(projectId);
+        projectDetailRepository.deleteAll(projectDetails);
 
         projectRepository.delete(project);
     }
@@ -100,13 +103,15 @@ public class ProjectService {
     }
 
     // 일정 수정
-    public void updateTask(Long taskId, ProjectDetailRequest projectDetailRequest) {
-        ProjectDetail projectDetail = projectDetailRepository.findById(taskId)
+    public void updateTask(Long taskId, ProjectDetailRequest request) {
+        ProjectDetail detail = projectDetailRepository.findById(taskId)
                 .orElseThrow(() -> new IllegalArgumentException("Task Not found"));
 
-        projectDetail.update(projectDetailRequest);
+        Project project = projectRepository.findById(request.projectId())
+                .orElseThrow(() -> new IllegalArgumentException("Project not found"));
 
-        projectDetailRepository.save(projectDetail);
+        detail.update(request, project);
+        projectDetailRepository.save(detail);
     }
 
     // 본인 프로젝트 확인
@@ -123,10 +128,10 @@ public class ProjectService {
         return projectMember.getProjectPosition() == ProjectPosition.TL;
     }
 
-    // 일정pk로 프로젝트pk 찾기
+    // 일정 pk로 프로젝트 pk 찾기 수정
     public Long taskCheck(Long taskId) {
         return projectDetailRepository.findById(taskId)
-                .map(ProjectDetail::getProjectId)
+                .map(projectDetail -> projectDetail.getProject().getId())  // getProject()로 Project 객체를 가져온 뒤 ID를 반환
                 .orElse(null);
     }
     

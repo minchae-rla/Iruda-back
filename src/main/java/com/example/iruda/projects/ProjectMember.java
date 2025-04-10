@@ -17,19 +17,21 @@ public class ProjectMember {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_Id", nullable = false)
-    private Long projectId;
+    private Project project;
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_Id", nullable = false)
-    private Long userId;
+    private User user;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private ProjectPosition projectPosition;  // 역할
 
     public ProjectMember(Project project, User user, ProjectPosition projectPosition) {
-        this.projectId = projectId;
-        this.userId = userId;
+        this.project = project;
+        this.user = user;
         this.projectPosition = projectPosition;
     }
 }
