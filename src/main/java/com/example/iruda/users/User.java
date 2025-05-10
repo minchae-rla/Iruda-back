@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -33,7 +34,13 @@ public class User {
     private String phone;
 
     @Column(nullable = false)
+    private LocalDate birth;
+
+    @Column(nullable = false)
     private String department;
+
+    @Column(nullable = false)
+    private boolean privacyAgree;
 
     @Column
     private String provider;
@@ -49,9 +56,11 @@ public class User {
         this.userPw = encryptedPassword;
         this.name = userRequest.name();
         this.phone = userRequest.phone();
+        this.birth = userRequest.birth();
         this.department = userRequest.department();
+        this.privacyAgree = userRequest.privacyAgree();
         this.provider = userRequest.provider();
         this.providerId = userRequest.providerId();
+
     }
 }
-
