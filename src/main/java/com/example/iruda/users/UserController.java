@@ -49,4 +49,11 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
         }
     }
+    
+    // 아이디 중복 체크
+    @PostMapping("/idCheck")
+    public ResponseEntity<Boolean> idCheck(@RequestBody UserRequest userRequest) {
+        boolean exists = userService.idCheck(userRequest);
+        return ResponseEntity.ok(exists);
+    }
 }

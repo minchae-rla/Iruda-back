@@ -31,4 +31,10 @@ public class UserService {
         }
         return null; // 인증 실패 시 null 반환
     }
+
+    //아이디 중복 체크
+    public boolean idCheck(UserRequest userRequest) {
+        User user = userRepository.findByUserId(userRequest.userId());
+        return user != null;
+    }
 }

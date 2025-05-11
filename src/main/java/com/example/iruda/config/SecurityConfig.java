@@ -37,6 +37,7 @@ public class SecurityConfig {
                                 .requestMatchers(
                                         "/api/users/signup",
                                         "/api/users/login",
+                                        "/api/users/idCheck",
                                         "/api/projects/add",
                                         "/api/projects/getProject",
                                         "/api/projects/addTask/**",
