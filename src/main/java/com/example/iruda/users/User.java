@@ -34,7 +34,7 @@ public class User {
     private String phone;
 
     @Column(nullable = false)
-    private LocalDate birth;
+    private String birth;
 
     @Column(nullable = false)
     private String department;

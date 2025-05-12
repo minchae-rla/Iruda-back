@@ -38,6 +38,8 @@ public class SecurityConfig {
                                         "/api/users/signup",
                                         "/api/users/login",
                                         "/api/users/idCheck",
+                                        "/api/users/findId",
+                                        "/api/users/findPw",
                                         "/api/projects/add",
                                         "/api/projects/getProject",
                                         "/api/projects/addTask/**",

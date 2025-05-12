@@ -2,6 +2,8 @@ package com.example.iruda.users;
 
 import com.example.iruda.jwt.JwtGenerator;
 import com.example.iruda.jwt.JwtTokenDTO;
+import com.example.iruda.users.dto.FindIdRequest;
+import com.example.iruda.users.dto.FindPwRequest;
 import com.example.iruda.users.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,5 +38,33 @@ public class UserService {
     public boolean idCheck(UserRequest userRequest) {
         User user = userRepository.findByUserId(userRequest.userId());
         return user != null;
+    }
+
+    //아이디 찾기
+    public String findId(FindIdRequest findIdRequest) {
+        User user = userRepository.findByNameAndBirthAndPhone(
+                findIdRequest.name(),
+                findIdRequest.birth(),
+                findIdRequest.phone()
+        );
+
+        if (user != null) {
+            return user.getUserId();
+        }
+        return null;
+    }
+
+    //비밀번호 찾기
+    public String findPw(FindPwRequest findPwRequest) {
+        User user = userRepository.findByUserIdAndNameAndBirthAndPhone(
+                findPwRequest.userId(),
+                findPwRequest.name(),
+                findPwRequest.birth(),
+                findPwRequest.phone()
+        );
+        if (user != null) {
+            return user.getUserPw();
+        }
+        return null;
     }
 }

@@ -2,6 +2,8 @@ package com.example.iruda.users;
 
 import com.example.iruda.jwt.JwtProvider;
 import com.example.iruda.jwt.JwtTokenDTO;
+import com.example.iruda.users.dto.FindIdRequest;
+import com.example.iruda.users.dto.FindPwRequest;
 import com.example.iruda.users.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -56,4 +58,29 @@ public class UserController {
         boolean exists = userService.idCheck(userRequest);
         return ResponseEntity.ok(exists);
     }
+
+    // 아이디 찾기
+    @PostMapping("/findId")
+    public ResponseEntity<String> findId(@RequestBody FindIdRequest findIdRequest) {
+        String userId = userService.findId(findIdRequest);
+
+        if (userId != null) {
+            return ResponseEntity.ok(userId);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("아이디를 찾을 수 없습니다.");
+        }
+    }
+
+    //비밀번호 찾기
+    @PostMapping("/findPw")
+    public ResponseEntity<String> findPw(@RequestBody FindPwRequest findPwRequest) {
+        String userPw = userService.findPw(findPwRequest);
+
+        if(userPw != null) {
+            return ResponseEntity.ok(userPw);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("비밀번호를 찾을 수 없습니다.");
+        }
+    }
+
 }

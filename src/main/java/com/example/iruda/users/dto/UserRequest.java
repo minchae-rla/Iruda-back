@@ -1,7 +1,6 @@
 package com.example.iruda.users.dto;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 public record UserRequest(
         String userId,
@@ -9,7 +8,7 @@ public record UserRequest(
         String name,
         String phone,
         String department,
-        LocalDate birth,
+        String birth,
         boolean privacyAgree,
         String provider,
         String providerId
@@ -20,3 +19,5 @@ public record UserRequest(
 
     }
 }
+
+
