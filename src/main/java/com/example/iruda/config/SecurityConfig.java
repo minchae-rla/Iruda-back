@@ -40,6 +40,8 @@ public class SecurityConfig {
                                         "/api/users/idCheck",
                                         "/api/users/findId",
                                         "/api/users/findPw",
+                                        "/api/users/setPw",
+                                        "/api/users/changePw",
                                         "/api/projects/add",
                                         "/api/projects/getProject",
                                         "/api/projects/addTask/**",

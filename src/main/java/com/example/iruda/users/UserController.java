@@ -8,10 +8,7 @@ import com.example.iruda.users.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -80,6 +77,16 @@ public class UserController {
             return ResponseEntity.ok(userPw);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("비밀번호를 찾을 수 없습니다.");
+        }
+    }
+    
+    //비밀번호 변경
+    @PutMapping("/setPw")
+    public void setPw(@RequestBody UserRequest userRequest) {
+        String userPw = userService.setPw(userRequest);
+
+        if(userPw != null) {
+            return ResponseEntity.ok();
         }
     }
 

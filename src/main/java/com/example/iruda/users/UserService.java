@@ -42,7 +42,7 @@ public class UserService {
 
     //아이디 찾기
     public String findId(FindIdRequest findIdRequest) {
-        User user = userRepository.findByNameAndBirthAndPhone(
+        User user = userRepository.findUserIdByVerificationInfo(
                 findIdRequest.name(),
                 findIdRequest.birth(),
                 findIdRequest.phone()
@@ -56,7 +56,7 @@ public class UserService {
 
     //비밀번호 찾기
     public String findPw(FindPwRequest findPwRequest) {
-        User user = userRepository.findByUserIdAndNameAndBirthAndPhone(
+        User user = userRepository.findUserPwByVerificationInfo(
                 findPwRequest.userId(),
                 findPwRequest.name(),
                 findPwRequest.birth(),
@@ -66,5 +66,10 @@ public class UserService {
             return user.getUserPw();
         }
         return null;
+    }
+    
+    //비밀번호 변경
+    public String setPw(UserRequest userRequest) {
+        User user = userRepository.findUserIdByVerificationInfo()
     }
 }
