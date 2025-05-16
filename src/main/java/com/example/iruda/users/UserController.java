@@ -85,9 +85,6 @@ public class UserController {
     public void setPw(@RequestBody UserRequest userRequest) {
         String userPw = userService.setPw(userRequest);
 
-        if(userPw != null) {
-            return ResponseEntity.ok();
-        }
     }
 
 }
