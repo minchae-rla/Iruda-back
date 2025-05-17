@@ -71,20 +71,25 @@ public class UserController {
     //비밀번호 찾기
     @PostMapping("/findPw")
     public ResponseEntity<String> findPw(@RequestBody FindPwRequest findPwRequest) {
-        String userPw = userService.findPw(findPwRequest);
+        boolean exists = userService.findPw(findPwRequest);
 
-        if(userPw != null) {
-            return ResponseEntity.ok(userPw);
+        if (exists) {
+            return ResponseEntity.ok("사용자 확인 완료");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("비밀번호를 찾을 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 사용자가 없습니다.");
         }
     }
-    
-    //비밀번호 변경
-    @PutMapping("/setPw")
-    public void setPw(@RequestBody UserRequest userRequest) {
-        String userPw = userService.setPw(userRequest);
 
+    // 비밀번호 변경
+    @PutMapping("/setPw")
+    public ResponseEntity<String> setPw(@RequestBody UserRequest userRequest) {
+        boolean isUpdated = userService.setPw(userRequest);
+
+        if (isUpdated) {
+            return ResponseEntity.ok("비밀번호 변경 완료");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
+        }
     }
 
 }

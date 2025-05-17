@@ -54,22 +54,28 @@ public class UserService {
         return null;
     }
 
-    //비밀번호 찾기
-    public String findPw(FindPwRequest findPwRequest) {
+    // 비밀번호 찾기
+    public boolean findPw(FindPwRequest findPwRequest) {
         User user = userRepository.findUserPwByVerificationInfo(
                 findPwRequest.userId(),
                 findPwRequest.name(),
                 findPwRequest.birth(),
                 findPwRequest.phone()
         );
-        if (user != null) {
-            return user.getUserPw();
-        }
-        return null;
+
+        return user != null;
     }
-    
-    //비밀번호 변경
-    public String setPw(UserRequest userRequest) {
-        User user = userRepository.findUserIdByVerificationInfo()
+
+    // 비밀번호 변경
+    public boolean setPw(UserRequest userRequest) {
+        User user = userRepository.findByUserId(userRequest.userId());
+
+        if (user != null) {
+            String encodedPw = passwordEncoder.encode(userRequest.userPw());
+            user.setPw(encodedPw);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 }
