@@ -55,7 +55,7 @@ public class UserService {
     }
 
     // 비밀번호 찾기
-    public boolean findPw(FindPwRequest findPwRequest) {
+    public Long findUserIdByVerificationInfo(FindPwRequest findPwRequest) {
         User user = userRepository.findUserPwByVerificationInfo(
                 findPwRequest.userId(),
                 findPwRequest.name(),
@@ -63,7 +63,7 @@ public class UserService {
                 findPwRequest.phone()
         );
 
-        return user != null;
+        return user != null ? user.getId() : null;
     }
 
     // 비밀번호 변경

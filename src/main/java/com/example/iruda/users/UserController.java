@@ -70,11 +70,11 @@ public class UserController {
 
     //비밀번호 찾기
     @PostMapping("/findPw")
-    public ResponseEntity<String> findPw(@RequestBody FindPwRequest findPwRequest) {
-        boolean exists = userService.findPw(findPwRequest);
+    public ResponseEntity<?> findPw(@RequestBody FindPwRequest findPwRequest) {
+        Long userId = userService.findUserIdByVerificationInfo(findPwRequest);
 
-        if (exists) {
-            return ResponseEntity.ok("사용자 확인 완료");
+        if (userId != null) {
+            return ResponseEntity.ok(userId); // PK 값 반환
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 사용자가 없습니다.");
         }
