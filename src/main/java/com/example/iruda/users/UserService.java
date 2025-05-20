@@ -42,7 +42,7 @@ public class UserService {
 
     //아이디 찾기
     public String findId(FindIdRequest findIdRequest) {
-        User user = userRepository.findUserIdByVerificationInfo(
+        User user = userRepository.findByNameAndBirthAndPhone(
                 findIdRequest.name(),
                 findIdRequest.birth(),
                 findIdRequest.phone()
@@ -54,28 +54,4 @@ public class UserService {
         return null;
     }
 
-    // 비밀번호 찾기
-    public Long findUserIdByVerificationInfo(FindPwRequest findPwRequest) {
-        User user = userRepository.findUserPwByVerificationInfo(
-                findPwRequest.userId(),
-                findPwRequest.name(),
-                findPwRequest.birth(),
-                findPwRequest.phone()
-        );
-
-        return user != null ? user.getId() : null;
-    }
-
-    // 비밀번호 변경
-    public boolean setPw(UserRequest userRequest) {
-        User user = userRepository.findByUserId(userRequest.userId());
-
-        if (user != null) {
-            String encodedPw = passwordEncoder.encode(userRequest.userPw());
-            user.setPw(encodedPw);
-            userRepository.save(user);
-            return true;
-        }
-        return false;
-    }
 }

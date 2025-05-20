@@ -68,28 +68,5 @@ public class UserController {
         }
     }
 
-    //비밀번호 찾기
-    @PostMapping("/findPw")
-    public ResponseEntity<?> findPw(@RequestBody FindPwRequest findPwRequest) {
-        Long userId = userService.findUserIdByVerificationInfo(findPwRequest);
-
-        if (userId != null) {
-            return ResponseEntity.ok(userId); // PK 값 반환
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("일치하는 사용자가 없습니다.");
-        }
-    }
-
-    // 비밀번호 변경
-    @PutMapping("/setPw")
-    public ResponseEntity<String> setPw(@RequestBody UserRequest userRequest) {
-        boolean isUpdated = userService.setPw(userRequest);
-
-        if (isUpdated) {
-            return ResponseEntity.ok("비밀번호 변경 완료");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("사용자를 찾을 수 없습니다.");
-        }
-    }
 
 }
