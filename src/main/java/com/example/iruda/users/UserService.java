@@ -54,4 +54,19 @@ public class UserService {
         return null;
     }
 
+    //비밀번호 찾기
+    public Long findPw(FindPwRequest findPwRequest) {
+        User user = userRepository.findPw(
+                findPwRequest.userId(),
+                findPwRequest.name(),
+                findPwRequest.birth(),
+                findPwRequest.phone()
+        );
+
+        if (user != null) {
+            return user.getId();
+        }
+        return null;
+    }
+
 }
