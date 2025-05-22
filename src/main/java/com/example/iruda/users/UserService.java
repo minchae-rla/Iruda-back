@@ -4,10 +4,12 @@ import com.example.iruda.jwt.JwtGenerator;
 import com.example.iruda.jwt.JwtTokenDTO;
 import com.example.iruda.users.dto.FindIdRequest;
 import com.example.iruda.users.dto.FindPwRequest;
+import com.example.iruda.users.dto.SetPwRequest;
 import com.example.iruda.users.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +69,15 @@ public class UserService {
             return user.getId();
         }
         return null;
+    }
+
+    //비밀번호 변경
+    @Transactional
+    public void setPw(SetPwRequest setPwRequest) {
+        User user = userRepository.findById(setPwRequest.id())
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+
+        user.setUserPw(setPwRequest.userPw());
     }
 
 }

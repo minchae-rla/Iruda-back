@@ -4,6 +4,7 @@ import com.example.iruda.jwt.JwtProvider;
 import com.example.iruda.jwt.JwtTokenDTO;
 import com.example.iruda.users.dto.FindIdRequest;
 import com.example.iruda.users.dto.FindPwRequest;
+import com.example.iruda.users.dto.SetPwRequest;
 import com.example.iruda.users.dto.UserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -71,10 +72,10 @@ public class UserController {
     //비밀번호 찾기(user가 존재하는지 확인)
     @PostMapping("/findPw")
     public ResponseEntity<Long> findPw(@RequestBody FindPwRequest findPwRequest) {
-        Long userId = userService.findPw(findPwRequest);
+        Long id = userService.findPw(findPwRequest);
 
-        if (userId != null) {
-            return ResponseEntity.ok(userId);
+        if (id != null) {
+            return ResponseEntity.ok(id);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -82,15 +83,10 @@ public class UserController {
 
     
     //비밀번호 변경
-//    @PutMapping("/setPw")
-//    public ResponseEntity<String> setPw(@RequestBody SetPwRequest setPwRequest) {
-//        User user = userService.setPw(setPwRequest);
-//
-//        if(user != null) {
-//            return ResponseEntity.status(HttpStatus.)
-//        } else {
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//        }
-//    }
+    @PutMapping("/setPw")
+    public ResponseEntity<String> setPw(@RequestBody SetPwRequest setPwRequest) {
+        userService.setPw(setPwRequest);
+        return ResponseEntity.status(HttpStatus.OK).body("비밀번호가 변경되었습니다.");
+    }
 
 }

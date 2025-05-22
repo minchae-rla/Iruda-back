@@ -6,12 +6,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Table(name="users")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -62,5 +63,8 @@ public class User {
         this.provider = userRequest.provider();
         this.providerId = userRequest.providerId();
 
+    }
+
+    public void setUserPw(String s) {
     }
 }
