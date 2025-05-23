@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByNameAndBirthAndPhone(String name, String birth, String phone);
 
     @Query("SELECT u.id FROM User u WHERE u.userId = :userId AND u.name = :name AND u.birth = :birth AND u.phone = :phone")
-    User findPw(
+    Long findPw(
             @Param("userId") String userId,
             @Param("name") String name,
             @Param("birth") String birth,

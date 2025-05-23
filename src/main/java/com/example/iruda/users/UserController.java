@@ -85,6 +85,10 @@ public class UserController {
     //비밀번호 변경
     @PutMapping("/setPw")
     public ResponseEntity<String> setPw(@RequestBody SetPwRequest setPwRequest) {
+        if (setPwRequest.id() == null) {
+            return ResponseEntity.badRequest().body("잘못된 접근입니다.");
+        }
+
         userService.setPw(setPwRequest);
         return ResponseEntity.status(HttpStatus.OK).body("비밀번호가 변경되었습니다.");
     }

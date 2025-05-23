@@ -41,7 +41,6 @@ public class SecurityConfig {
                                         "/api/users/findId",
                                         "/api/users/findPw",
                                         "/api/users/setPw",
-                                        "/api/users/changePw",
                                         "/api/projects/add",
                                         "/api/projects/getProject",
                                         "/api/projects/addTask/**",
@@ -50,8 +49,8 @@ public class SecurityConfig {
                                         "/api/projects/update/**",
                                         "/api/projects/deleteTask/**",
                                         "api/projects/updateTask/**",
-                                        "api/projects/getTask/**",
-                                        "api/projects/inviteUser/**").permitAll()
+                                        "/api/projects/getTask/**",
+                                        "/api/projects/inviteUser/**").permitAll()
                                 .anyRequest().authenticated()
 
                 );
