@@ -64,7 +64,4 @@ public class User {
         this.providerId = userRequest.providerId();
 
     }
-
-    public void setUserPw(String s) {
-    }
 }
