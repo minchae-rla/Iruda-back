@@ -11,20 +11,3 @@ public class KakaoTokenDTO {
     private String scope;
     private int refresh_token_expires_in;
 }
-
-@Data
-public class KakaoUserDTO {
-    private Long id;
-    private KakaoAccount kakao_account;
-
-    @Data
-    public static class KakaoAccount {
-        private String email;
-        private Profile profile;
-
-        @Data
-        public static class Profile {
-            private String nickname;
-        }
-    }
-}
