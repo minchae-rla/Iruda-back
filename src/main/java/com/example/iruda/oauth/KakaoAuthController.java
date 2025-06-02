@@ -46,6 +46,7 @@ public class KakaoAuthController {
 
         // 3. 프론트에 필요한 정보 전달 (예: 쿼리 파라미터로 리디렉션)
         String frontendRedirect = "http://localhost:3000/kakao-join?nickname=" + nickname + "&email=" + email;
+        
 
         return new RedirectView(frontendRedirect);
     }
