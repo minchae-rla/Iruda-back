@@ -25,7 +25,7 @@ public class User {
     @Column(nullable = false)
     private String userId;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String userPw;
 
     @Column(nullable = false)

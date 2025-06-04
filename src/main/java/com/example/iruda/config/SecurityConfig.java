@@ -2,6 +2,7 @@ package com.example.iruda.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
@@ -15,7 +16,7 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();  // BCryptPasswordEncoder를 빈으로 등록
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -25,15 +26,14 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 )
                 .headers(headers ->
-                        headers
-                                .frameOptions(
-                                        HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                        headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
-                .authorizeHttpRequests((authz) ->
+                .authorizeHttpRequests(authz ->
                         authz
+                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers(
                                         "/api/users/signup",
                                         "/api/users/login",
@@ -41,6 +41,9 @@ public class SecurityConfig {
                                         "/api/users/findId",
                                         "/api/users/findPw",
                                         "/api/users/setPw",
+                                        "/api/auth/kakao/login",
+                                        "/api/auth/kakao/me",
+                                        "/api/auth/kakao/callback",
                                         "/api/projects/add",
                                         "/api/projects/getProject",
                                         "/api/projects/addTask/**",
@@ -48,11 +51,11 @@ public class SecurityConfig {
                                         "/api/projects/delete/**",
                                         "/api/projects/update/**",
                                         "/api/projects/deleteTask/**",
-                                        "api/projects/updateTask/**",
+                                        "/api/projects/updateTask/**",
                                         "/api/projects/getTask/**",
-                                        "/api/projects/inviteUser/**").permitAll()
+                                        "/api/projects/inviteUser/**"
+                                ).permitAll()
                                 .anyRequest().authenticated()
-
                 );
 
         return http.build();
