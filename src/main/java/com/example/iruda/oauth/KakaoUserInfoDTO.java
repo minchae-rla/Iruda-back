@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KakaoUserInfoDto {
+public class KakaoUserInfoDTO {
 
     private Long id;
 

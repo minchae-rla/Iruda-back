@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findByUserId(String userId);  // userId로 User를 찾는 메서드
+
+    User findByUserId(String userId);  // userId로 User 찾기
 
     User findByNameAndBirthAndPhone(String name, String birth, String phone);
 
@@ -18,4 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("birth") String birth,
             @Param("phone") String phone
     );
+
+    // 추가: providerId로 User 찾기 (카카오 로그인용)
+    User findByProviderId(String providerId);
 }

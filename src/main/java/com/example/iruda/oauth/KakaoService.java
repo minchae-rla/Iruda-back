@@ -34,7 +34,7 @@ public class KakaoService {
     }
 
     public String getAccessTokenFromKakao(String code) {
-        KakaoTokenResponseDto tokenResponse = webClientToken
+        KakaoTokenResponseDTO tokenResponse = webClientToken
                 .post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/oauth/token")
@@ -44,19 +44,19 @@ public class KakaoService {
                         .queryParam("code", code)
                         .build())
                 .retrieve()
-                .bodyToMono(KakaoTokenResponseDto.class)
+                .bodyToMono(KakaoTokenResponseDTO.class)
                 .block();
 
         return tokenResponse.getAccessToken();
     }
 
-    public KakaoUserInfoDto getUserInfo(String accessToken) {
-        KakaoUserInfoDto userInfo = webClientUserInfo
+    public KakaoUserInfoDTO getUserInfo(String accessToken) {
+        KakaoUserInfoDTO userInfo = webClientUserInfo
                 .get()
                 .uri("/v2/user/me")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
                 .retrieve()
-                .bodyToMono(KakaoUserInfoDto.class)
+                .bodyToMono(KakaoUserInfoDTO.class)
                 .block();
 
         return userInfo;

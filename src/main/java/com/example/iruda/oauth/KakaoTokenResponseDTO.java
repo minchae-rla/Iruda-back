@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KakaoTokenResponseDto {
+public class KakaoTokenResponseDTO {
 
     @JsonProperty("access_token")
     private String accessToken;

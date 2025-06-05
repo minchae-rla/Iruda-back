@@ -22,7 +22,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String userId;
 
     @Column(nullable = true)
@@ -62,6 +62,6 @@ public class User {
         this.privacyAgree = userRequest.privacyAgree();
         this.provider = userRequest.provider();
         this.providerId = userRequest.providerId();
-
     }
+
 }
