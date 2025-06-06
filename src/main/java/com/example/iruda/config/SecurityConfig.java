@@ -41,8 +41,6 @@ public class SecurityConfig {
                                         "/api/users/findId",
                                         "/api/users/findPw",
                                         "/api/users/setPw",
-                                        "/api/auth/kakao/login",
-                                        "/api/auth/kakao/me",
                                         "/api/auth/kakao/callback",
                                         "/api/projects/add",
                                         "/api/projects/getProject",

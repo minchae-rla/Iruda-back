@@ -20,6 +20,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("phone") String phone
     );
 
-    // 추가: providerId로 User 찾기 (카카오 로그인용)
-    User findByProviderId(String providerId);
+
 }

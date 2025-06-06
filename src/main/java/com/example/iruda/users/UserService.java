@@ -2,10 +2,7 @@ package com.example.iruda.users;
 
 import com.example.iruda.jwt.JwtGenerator;
 import com.example.iruda.jwt.JwtTokenDTO;
-import com.example.iruda.users.dto.FindIdRequest;
-import com.example.iruda.users.dto.FindPwRequest;
-import com.example.iruda.users.dto.SetPwRequest;
-import com.example.iruda.users.dto.UserRequest;
+import com.example.iruda.users.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -76,5 +73,8 @@ public class UserService {
         user.setUserPw(encodedPw);
         userRepository.save(user);
     }
+
+
+
 
 }
