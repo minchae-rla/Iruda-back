@@ -9,11 +9,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry
-                .addMapping("/api/**")
-                .allowedOrigins("http://localhost:5173")
+                .addMapping("/api/**")                      // API 경로에만 CORS 적용
+                .allowedOrigins("http://localhost:5173")   // 프론트 URL
                 .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                .allowCredentials(true)
+                .allowCredentials(true)                     // 쿠키 허용
                 .exposedHeaders("Authorization", "Set-Cookie");
     }
 }
