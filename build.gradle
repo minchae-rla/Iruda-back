@@ -46,6 +46,10 @@ dependencies {
     //카카오로그인 의존성 추가(webflux, thymleaf)
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    
+    //쿨sms 의존성 추가
+    implementation 'net.nurigo:sdk:4.3.0'
+
 }
 
 tasks.named('test') {

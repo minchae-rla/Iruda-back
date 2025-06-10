@@ -95,19 +95,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("비밀번호가 변경되었습니다.");
     }
 
-    //카카오 회원가입
-    @PostMapping("/signup/kakao")
-    public ResponseEntity<JwtTokenDTO> kakaoSignup(@RequestBody UserRequest userRequest) {
-        User savedUser = userService.kakaoSignup(userRequest);  // 수정된 부분
-        JwtTokenDTO token = jwtGenerator.generateToken(savedUser.getId());
-        return ResponseEntity.ok(token);
-    }
-
-    @GetMapping("/oauth/kakao/callback")
-    public ResponseEntity<JwtTokenDTO> kakaoCallback(@RequestParam String code) {
-        JwtTokenDTO token = userService.kakaoLogin(code);
-        return ResponseEntity.ok(token);
-    }
 
 
 

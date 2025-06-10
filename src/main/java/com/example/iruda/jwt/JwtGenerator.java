@@ -1,6 +1,5 @@
 package com.example.iruda.jwt;
 
-import com.example.iruda.kakao.dto.KakaoUserInfo;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -51,14 +50,4 @@ public class JwtGenerator {
                 .build();
     }
 
-    public String generateTempToken(KakaoUserInfo kakaoUserInfo) {
-        return Jwts.builder()
-                .setSubject("TEMP_KAKAO_USER")
-                .claim("provider", kakaoUserInfo.getProvider())
-                .claim("providerId", kakaoUserInfo.getProviderId())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000)) // 10분 유효
-                .signWith(key, SignatureAlgorithm.HS256)
-                .compact();
-    }
 }
