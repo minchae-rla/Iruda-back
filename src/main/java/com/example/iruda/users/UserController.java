@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final JwtGenerator jwtGenerator;
-    private final JwtProvider jwtProvider;  // JwtProvider 의존성 주입 추가
+    private final JwtProvider jwtProvider;
 
     // 회원 가입 처리
     @PostMapping("/signup")

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -20,7 +21,14 @@ public class UserService {
 
     // 일반 회원가입
     public void signup(UserRequest userRequest) {
-        String encryptedPassword = passwordEncoder.encode(userRequest.userPw());
+        String rawPassword = userRequest.userPw();
+
+        // password가 null 또는 빈 문자열인 경우 → OAuth 사용자로 판단하여 임시 비밀번호 생성
+        if (rawPassword == null || rawPassword.isBlank()) {
+            rawPassword = UUID.randomUUID().toString(); // 또는 "oauth_kakao"
+        }
+
+        String encryptedPassword = passwordEncoder.encode(rawPassword);
         User user = new User(userRequest, encryptedPassword);
         userRepository.save(user);
     }

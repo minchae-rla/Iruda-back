@@ -28,7 +28,9 @@ public class SecurityConfig {
                 .headers(headers ->
                         headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/favicon.ico", "/error").permitAll()
                         .requestMatchers("/api/oauth/**").permitAll()
+                        .requestMatchers("/api/sms/**").permitAll()
                         .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/api/projects/**").permitAll()
                         .anyRequest().authenticated()
