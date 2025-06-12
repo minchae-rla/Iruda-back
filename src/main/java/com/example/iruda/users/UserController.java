@@ -1,6 +1,5 @@
 package com.example.iruda.users;
 
-import com.example.iruda.jwt.JwtGenerator;
 import com.example.iruda.jwt.JwtProvider;
 import com.example.iruda.jwt.JwtTokenDTO;
 import com.example.iruda.users.dto.FindIdRequest;

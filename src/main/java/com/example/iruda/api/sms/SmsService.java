@@ -12,7 +12,7 @@ public class SmsService {
 
     private final SmsUtil smsUtil;
 
-    // 전화번호 별로 인증번호 임시 저장 (실무는 DB, Redis 등 사용)
+    // 전화번호 별로 인증번호 임시 저장
     private Map<String, String> verificationCodes = new HashMap<>();
 
     // 생성자를 통한 의존성 주입
@@ -32,7 +32,7 @@ public class SmsService {
         String code = generateCode();
         verificationCodes.put(phoneNumber, code);
         String message = "[IRUDA] 인증번호는 " + code + "입니다.";
-        smsUtil.sendSms(phoneNumber, message);  // 인스턴스 메서드 호출로 변경
+        smsUtil.sendSms(phoneNumber, message);
     }
 
     // 인증번호 검증
