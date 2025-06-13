@@ -36,7 +36,7 @@ public class ProjectService {
     }
 
 
-    // 프로젝트 조회 수정
+    // 프로젝트 조회
     public List<ProjectResponse> getProjects(Long userId) {
         List<ProjectMember> projectMembers = projectMemberRepository.findByUserId(userId);
 
