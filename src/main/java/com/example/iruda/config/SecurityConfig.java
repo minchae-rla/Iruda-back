@@ -33,6 +33,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/sms/**").permitAll()
                         .requestMatchers("/api/users/**").permitAll()
                         .requestMatchers("/api/projects/**").permitAll()
+                        .requestMatchers("/api/tasks/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
