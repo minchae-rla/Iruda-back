@@ -1,6 +1,5 @@
 package com.example.iruda.tasks.dto;
 
-import com.example.iruda.projects.ProjectDetail;
 import com.example.iruda.tasks.Task;
 
 import java.util.Date;

@@ -1,10 +1,9 @@
 package com.example.iruda.projects;
 
-import com.example.iruda.jwt.JwtProvider;
-import com.example.iruda.projects.dto.ProjectDetailRequest;
-import com.example.iruda.projects.dto.ProjectDetailResponse;
 import com.example.iruda.projects.dto.ProjectRequest;
 import com.example.iruda.projects.dto.ProjectResponse;
+import com.example.iruda.tasks.Task;
+import com.example.iruda.tasks.TaskRepository;
 import com.example.iruda.users.User;
 import com.example.iruda.users.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ import java.util.Objects;
 public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectMemberRepository projectMemberRepository;
-    private final ProjectDetailRepository projectDetailRepository;
+    private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
     // 프로젝트 생성
@@ -54,25 +53,6 @@ public class ProjectService {
                 .toList();
     }
 
-
-    // 일정 조회
-    public ProjectDetailResponse getTask(Long taskId) {
-        return projectDetailRepository.findById(taskId)
-                .map(ProjectDetailResponse::fromEntity)
-                .orElse(null);
-    }
-
-
-    // 일정 추가
-    public void addTask(ProjectDetailRequest request) {
-        Project project = projectRepository.findById(request.projectId())
-                .orElseThrow(() -> new IllegalArgumentException("Project not found"));
-
-        ProjectDetail detail = new ProjectDetail(request, project);
-        projectDetailRepository.save(detail);
-    }
-
-
     // 프로젝트 삭제
     public void deleteProject(Long projectId) {
         Project project = projectRepository.findById(projectId)
@@ -81,15 +61,10 @@ public class ProjectService {
         List<ProjectMember> projectMembers = projectMemberRepository.findAllByProjectId(projectId);
         projectMemberRepository.deleteAll(projectMembers);
 
-        List<ProjectDetail> projectDetails = projectDetailRepository.findAllByProjectId(projectId);
-        projectDetailRepository.deleteAll(projectDetails);
+        List<Task> projectDetails = taskRepository.findAllByProjectId(projectId);
+        taskRepository.deleteAll(projectDetails);
 
         projectRepository.delete(project);
-    }
-
-    // 일정 삭제
-    public void deleteTask(Long taskId) {
-        projectDetailRepository.deleteById(taskId);
     }
 
     // 프로젝트 제목 수정
@@ -100,18 +75,6 @@ public class ProjectService {
         project.update(projectRequest);
 
         projectRepository.save(project);
-    }
-
-    // 일정 수정
-    public void updateTask(Long taskId, ProjectDetailRequest request) {
-        ProjectDetail detail = projectDetailRepository.findById(taskId)
-                .orElseThrow(() -> new IllegalArgumentException("Task Not found"));
-
-        Project project = projectRepository.findById(request.projectId())
-                .orElseThrow(() -> new IllegalArgumentException("Project not found"));
-
-        detail.update(request, project);
-        projectDetailRepository.save(detail);
     }
 
     // 본인 프로젝트 확인
@@ -130,7 +93,7 @@ public class ProjectService {
 
     // 일정 pk로 프로젝트 pk 찾기 수정
     public Long taskCheck(Long taskId) {
-        return projectDetailRepository.findById(taskId)
+        return taskRepository.findById(taskId)
                 .map(projectDetail -> projectDetail.getProject().getId())  // getProject()로 Project 객체를 가져온 뒤 ID를 반환
                 .orElse(null);
     }

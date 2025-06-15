@@ -52,7 +52,7 @@ public class Task {
     @Column(nullable = false)
     private String alarmSet;
 
-    public task(TaskRequest taskRequest, Project project) {
+    public Task(TaskRequest taskRequest, Project project) {
         this.project = project;
         this.title = taskRequest.title();
         this.content = taskRequest.content();

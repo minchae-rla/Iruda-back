@@ -1,6 +1,7 @@
 package com.example.iruda.projects;
 
 import com.example.iruda.projects.dto.ProjectRequest;
+import com.example.iruda.tasks.Task;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +28,7 @@ public class Project {
     private List<ProjectMember> projectMembers;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProjectDetail> projectDetails;
+    private List<Task> task;
 
     public Project(ProjectRequest projectRequest) {
         this.name = projectRequest.name();

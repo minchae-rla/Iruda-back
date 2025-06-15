@@ -1,8 +1,6 @@
 package com.example.iruda.projects;
 
 import com.example.iruda.jwt.JwtProvider;
-import com.example.iruda.projects.dto.ProjectDetailRequest;
-import com.example.iruda.projects.dto.ProjectDetailResponse;
 import com.example.iruda.projects.dto.ProjectRequest;
 import com.example.iruda.projects.dto.ProjectResponse;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -46,30 +44,6 @@ public class ProjectController {
         }
     }
 
-    //일정 등록
-    @PostMapping("/addTask/{projectId}")
-    public ResponseEntity<String> addTask(@PathVariable Long projectId, @RequestBody ProjectDetailRequest projectDetailRequest, @RequestHeader("Authorization") String authorization) {
-        try {
-            String token = authorization.substring(7);
-
-            Long userId = jwtProvider.getUserIdFromToken(token);
-
-            boolean projectUserCheck = projectService.projectUserCheck(userId, projectId);
-            if (!projectUserCheck) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이 일정을 추가할 권한이 없습니다.");
-            }
-            projectService.addTask(projectDetailRequest);
-
-            return ResponseEntity.ok("일정이 성공적으로 추가되었습니다.");
-
-        } catch (ExpiredJwtException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
-        } catch (JwtException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 토큰입니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
-        }
-    }
 
     //프로젝트 전체 조회(제목만)
     @GetMapping("/getProject")
@@ -92,33 +66,6 @@ public class ProjectController {
         }
     }
 
-    // 일정 조회
-    @GetMapping("/getTask/{taskId}")
-    public ResponseEntity<ProjectDetailResponse> getTask(
-            @RequestHeader("Authorization") String authorization,
-            @PathVariable Long taskId) {
-        try {
-            String token = authorization.substring(7);
-            Long userId = jwtProvider.getUserIdFromToken(token);
-
-            Long projectId = projectService.taskCheck(taskId);
-            boolean projectUserCheck = projectService.projectUserCheck(userId, projectId);
-            if (!projectUserCheck) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-            }
-
-            ProjectDetailResponse task = projectService.getTask(taskId);
-
-            return ResponseEntity.ok(task);
-
-        } catch (ExpiredJwtException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        } catch (JwtException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-        }
-    }
 
 
     // 프로젝트 삭제
@@ -148,32 +95,6 @@ public class ProjectController {
         }
     }
 
-    //프로젝트 일정 삭제
-    @DeleteMapping("/deleteTask/{taskId}")
-    public ResponseEntity<String> deleteTask(@PathVariable Long taskId, @RequestHeader("Authorization") String authorization) {
-        try {
-            String token = authorization.substring(7);
-
-            Long userId = jwtProvider.getUserIdFromToken(token);
-
-            Long projectId = projectService.taskCheck(taskId);
-
-            boolean projectUserCheck = projectService.projectUserCheck(userId, projectId);
-            if (!projectUserCheck) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이 일정을 삭제할 권한이 없습니다");
-            }
-            projectService.deleteTask(taskId);
-
-            return ResponseEntity.ok("일정이 성공적으로 삭제되었습니다.");
-
-        } catch (ExpiredJwtException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
-        } catch (JwtException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 토큰입니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
-        }
-    }
 
     //프로젝트 수정
     @PutMapping("/update/{projectId}")
@@ -201,32 +122,6 @@ public class ProjectController {
 
     }
 
-    //일정 수정
-    @PutMapping("/updateTask/{taskId}")
-    public ResponseEntity<String> updateTask(@PathVariable Long taskId, @RequestBody ProjectDetailRequest projectDetailRequest, @RequestHeader("Authorization") String authorization) {
-        try {
-            String token = authorization.substring(7);
-
-            Long userId = jwtProvider.getUserIdFromToken(token);
-
-            Long projectId = projectService.taskCheck(taskId);
-
-            boolean projectUserCheck = projectService.projectUserCheck(userId, projectId);
-            if (!projectUserCheck) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("이 프로젝트를 수정할 권한이 없습니다.");
-            }
-            projectService.updateTask(taskId, projectDetailRequest);
-
-            return ResponseEntity.ok("일정이 성공적으로 수정되었습니다.");
-        } catch (ExpiredJwtException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
-        } catch (JwtException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 토큰입니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
-        }
-
-    }
 
     //프로젝트 팀원 추가
     @PostMapping("/inviteUser/{projectId}")
