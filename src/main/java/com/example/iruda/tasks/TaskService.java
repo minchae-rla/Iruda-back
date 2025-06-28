@@ -7,6 +7,9 @@ import com.example.iruda.tasks.dto.TaskResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class TaskService {
@@ -23,7 +26,14 @@ public class TaskService {
         taskRepository.save(task);
     }
     
-    //일정 조회
+    //일정 전체 조회
+    public List<TaskResponse> getAllTasks(Long projectId) {
+        return taskRepository.findAllByProjectId(projectId).stream()
+                .map(TaskResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+    
+    //일정 상세
     public TaskResponse getTask(Long taskId) {
         return taskRepository.findById(taskId)
                 .map(TaskResponse::fromEntity)
