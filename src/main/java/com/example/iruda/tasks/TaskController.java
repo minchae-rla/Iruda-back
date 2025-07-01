@@ -151,5 +151,30 @@ public class TaskController {
     }
     
     //일정알람
+    @GetMapping("/alarm/{taskId}")
+    public ResponseEntity<TaskResponse> alarm(@PathVariable Long taskId, @RequestHeader("Authorization") String authorization) {
+        try {
+            String token = authorization.substring(7);
+            Long userId = jwtProvider.getUserIdFromToken(token);
+
+            Long projectId = projectService.taskCheck(taskId);
+            boolean projectUserCheck = projectService.projectUserCheck(userId, projectId);
+            if (!projectUserCheck) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+            }
+
+            TaskResponse task = taskService.getAlarm(taskId);
+
+            return ResponseEntity.ok(task);
+
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        } catch (JwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+    }   }
+    }
     
 }
