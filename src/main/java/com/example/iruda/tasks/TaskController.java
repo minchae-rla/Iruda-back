@@ -174,7 +174,6 @@ public class TaskController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
-    }   }
     }
     
 }
