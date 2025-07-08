@@ -149,23 +149,18 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
         }
     }
-    
+
     //일정알람
-    @GetMapping("/alarm/{taskId}")
-    public ResponseEntity<TaskResponse> alarm(@PathVariable Long taskId, @RequestHeader("Authorization") String authorization) {
+    @GetMapping("/alarm")
+    public ResponseEntity<List<TaskResponse>> getAlarm(@RequestHeader("Authorization") String authorization) {
         try {
             String token = authorization.substring(7);
+
             Long userId = jwtProvider.getUserIdFromToken(token);
 
-            Long projectId = projectService.taskCheck(taskId);
-            boolean projectUserCheck = projectService.projectUserCheck(userId, projectId);
-            if (!projectUserCheck) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
-            }
+            List<TaskResponse> tasks = taskService.getAlarm(userId);
 
-            TaskResponse task = taskService.getAlarm(taskId);
-
-            return ResponseEntity.ok(task);
+            return ResponseEntity.ok(tasks);
 
         } catch (ExpiredJwtException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -175,5 +170,4 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
     }
-    
 }
