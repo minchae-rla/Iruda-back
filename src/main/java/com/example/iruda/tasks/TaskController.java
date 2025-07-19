@@ -172,4 +172,8 @@ public class TaskController {
     }
     
     //일정알람만수정
+    @PostMapping("/turnAlarm")
+    public ResponseEntity<String> turnAlarm(@RequestHeader("Authorization") String authorization) {
+        
+    }
 }
