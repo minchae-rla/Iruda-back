@@ -10,7 +10,8 @@ public record TaskResponse(
         String content,
         Date startDate,
         Date endDate,
-        String alarmSet
+        String alarmSet,
+        String color
 ) {
     public static TaskResponse fromEntity(Task task) {
         return new TaskResponse(
@@ -19,7 +20,8 @@ public record TaskResponse(
                 task.getContent(),
                 task.getStartDate(),
                 task.getEndDate(),
-                task.getAlarmSet()
+                task.getAlarmSet(),
+                task.getColor()
         );
     }
 }

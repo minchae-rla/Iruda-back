@@ -52,6 +52,9 @@ public class Task {
     @Column(nullable = false)
     private String alarmSet;
 
+    @Column(nullable = false)
+    private String color;
+
     public Task(TaskRequest taskRequest, Project project) {
         this.project = project;
         this.title = taskRequest.title();
@@ -59,6 +62,7 @@ public class Task {
         this.startDate = taskRequest.startDate();
         this.endDate = taskRequest.endDate();
         this.alarmSet = taskRequest.alarmSet();
+        this.color = taskRequest.color();
         this.createDate = new Date();
         this.updateDate = new Date();
 
@@ -72,6 +76,7 @@ public class Task {
         this.startDate = taskRequest.startDate();
         this.endDate = taskRequest.endDate();
         this.alarmSet = taskRequest.alarmSet();
+        this.color = taskRequest.color();
         this.updateDate = new Date();
     }
 }

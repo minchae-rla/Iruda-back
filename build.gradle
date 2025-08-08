@@ -33,7 +33,7 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     //postgresql 의존성 추가
-    runtimeOnly 'org.postgresql:postgresql'
+    implementation  'org.postgresql:postgresql'
     
     //비밀번호 암호화 의존성 추가
     implementation 'org.springframework.boot:spring-boot-starter-security'

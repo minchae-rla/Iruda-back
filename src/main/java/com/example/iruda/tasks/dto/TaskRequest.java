@@ -8,6 +8,7 @@ public record TaskRequest(
         String content,
         Date startDate,
         Date endDate,
-        String alarmSet
+        String alarmSet,
+        String color
 ) {
 }
