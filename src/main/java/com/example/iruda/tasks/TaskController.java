@@ -48,7 +48,7 @@ public class TaskController {
         }
     }
 
-    //일정전체조회
+    //한프로젝트의 일정전체조회
     @GetMapping("/getAllTask/{projectId}")
     public ResponseEntity<?> getAllTask(@PathVariable Long projectId, @RequestHeader("Authorization") String authorization) {
         try {
@@ -97,6 +97,84 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
     }
+
+    //전체일정 조회
+    @GetMapping("/allTask")
+    public ResponseEntity<?> allTasks(@RequestHeader("Authorization") String authorization) {
+        try {
+            String token = authorization.substring(7);
+            Long userId = jwtProvider.getUserIdFromToken(token);
+
+            List<TaskResponse> task = taskService.allTasks(userId);
+            return ResponseEntity.ok(task);
+
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        } catch (JwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+    }
+
+    //오늘의 일정 조회
+    @GetMapping("/todayTask")
+    public ResponseEntity<?> getTodayTasks(@RequestHeader("Authorization") String authorization) {
+        try {
+            String token = authorization.substring(7);
+            Long userId = jwtProvider.getUserIdFromToken(token);
+
+            List<TaskResponse> tasks = taskService.getTodayTasks(userId);
+            return ResponseEntity.ok(tasks);
+
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
+        } catch (JwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 토큰입니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
+    }
+
+
+    //내일의 일정
+    @GetMapping("/tomorrowTask")
+    public ResponseEntity<?> getTomorrowTasks(@RequestHeader("Authorization") String authorization) {
+        try {
+            String token = authorization.substring(7);
+            Long userId = jwtProvider.getUserIdFromToken(token);
+
+            List<TaskResponse> tasks = taskService.getTomorrowTasks(userId);
+            return ResponseEntity.ok(tasks);
+
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
+        } catch (JwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 토큰입니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
+    }
+
+    //완료된 일정
+    @GetMapping("/completeTask")
+    public ResponseEntity<?> getCompleteTasks(@RequestHeader("Authorization") String authorization) {
+        try {
+            String token = authorization.substring(7);
+            Long userId = jwtProvider.getUserIdFromToken(token);
+
+            List<TaskResponse> tasks = taskService.getCompleteTasks(userId);
+            return ResponseEntity.ok(tasks);
+
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
+        } catch (JwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 토큰입니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류가 발생했습니다.");
+        }
+    }
+
 
     //일정삭제
     @DeleteMapping("/deleteTask/{taskId}")
@@ -170,10 +248,5 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
         }
     }
-    
-    //일정알람만수정
-//    @PostMapping("/turnAlarm")
-//    public ResponseEntity<String> turnAlarm(@RequestHeader("Authorization") String authorization) {
-//
-//    }
+
 }

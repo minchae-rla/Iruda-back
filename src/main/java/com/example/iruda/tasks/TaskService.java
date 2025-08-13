@@ -1,7 +1,6 @@
 package com.example.iruda.tasks;
 
 import com.example.iruda.projects.Project;
-import com.example.iruda.projects.ProjectMember;
 import com.example.iruda.projects.ProjectRepository;
 import com.example.iruda.tasks.dto.TaskRequest;
 import com.example.iruda.tasks.dto.TaskResponse;
@@ -9,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,9 +28,48 @@ public class TaskService {
         taskRepository.save(task);
     }
     
-    //일정 전체 조회
+    //프로젝트의 일정 전체 조회
     public List<TaskResponse> getAllTasks(Long projectId) {
         return taskRepository.findAllByProjectId(projectId).stream()
+                .map(TaskResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    //일정 전체 조회
+    public List<TaskResponse> allTasks(Long userId) {
+
+        return taskRepository.findAllByUserId(userId)
+                .stream()
+                .map(TaskResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    //오늘의 일정
+    public List<TaskResponse> getTodayTasks(Long userId) {
+        LocalDate date = LocalDate.now();
+
+        return taskRepository.findTaskByUserIdAndEndDate(userId, date)
+                .stream()
+                .map(TaskResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+    
+    //내일의 일정
+    public List<TaskResponse> getTomorrowTasks(Long userId) {
+        LocalDate date = LocalDate.now().plusDays(1);
+
+        return taskRepository.findTaskByUserIdAndEndDate(userId, date)
+                .stream()
+                .map(TaskResponse::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    //완료된 일정
+    public List<TaskResponse> getCompleteTasks(Long userId) {
+        LocalDate date = LocalDate.now();
+
+        return taskRepository.findCompleteTaskByUserIdAndEndDate(userId, date)
+                .stream()
                 .map(TaskResponse::fromEntity)
                 .collect(Collectors.toList());
     }
@@ -66,5 +105,7 @@ public class TaskService {
                 .map(TaskResponse::fromEntity)
                 .collect(Collectors.toList());
     }
+
+
 
 }
