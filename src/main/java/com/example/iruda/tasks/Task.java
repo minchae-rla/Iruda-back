@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
@@ -47,6 +48,7 @@ public class Task {
 
     @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @UpdateTimestamp
     private Date updateDate;
 
     @Column(nullable = false)

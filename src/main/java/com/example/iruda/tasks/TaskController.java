@@ -2,7 +2,6 @@ package com.example.iruda.tasks;
 
 import com.example.iruda.jwt.JwtProvider;
 import com.example.iruda.projects.ProjectService;
-import com.example.iruda.projects.dto.ProjectResponse;
 import com.example.iruda.tasks.dto.TaskRequest;
 import com.example.iruda.tasks.dto.TaskResponse;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
