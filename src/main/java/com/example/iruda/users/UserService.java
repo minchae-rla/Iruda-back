@@ -82,6 +82,39 @@ public class UserService {
         user.setUserPw(encodedPw);
         userRepository.save(user);
     }
+
+    // 회원 탈퇴
+    public boolean deleteUser(Long userId) {
+        if (userRepository.existsById(userId)) {  // 존재 여부 확인
+            userRepository.deleteById(userId);
+            return true;
+        }
+        return false;
+    }
+
+    //회원정보수정
+    @Transactional
+    public void updateUser(Long userId, UserRequest userRequest) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User Not found"));
+
+        String encodedPw = null;
+        if (userRequest.userPw() != null && !userRequest.userPw().isBlank()) {
+            encodedPw = passwordEncoder.encode(userRequest.userPw());
+        }
+
+        user.update(userRequest, encodedPw);
+        userRepository.save(user);
+    }
+
+
+    //내정보조회(이름, 아이디)
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    }
 }
+
+
 
 

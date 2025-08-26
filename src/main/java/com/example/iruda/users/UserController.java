@@ -2,14 +2,16 @@ package com.example.iruda.users;
 
 import com.example.iruda.jwt.JwtProvider;
 import com.example.iruda.jwt.JwtTokenDTO;
-import com.example.iruda.users.dto.FindIdRequest;
-import com.example.iruda.users.dto.FindPwRequest;
-import com.example.iruda.users.dto.SetPwRequest;
-import com.example.iruda.users.dto.UserRequest;
+import com.example.iruda.tasks.dto.TaskResponse;
+import com.example.iruda.users.dto.*;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -93,6 +95,65 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("비밀번호가 변경되었습니다.");
     }
 
+
+    // 회원탈퇴
+    @DeleteMapping("/deleteUser")
+    public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String authorization) {
+        try {
+            String token = authorization.substring(7); // "Bearer " 제거
+            Long userId = jwtProvider.getUserIdFromToken(token);
+
+            boolean deleted = userService.deleteUser(userId);
+
+            if (deleted) {
+                return ResponseEntity.ok("회원 탈퇴가 완료되었습니다.");
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("회원 정보를 찾을 수 없습니다.");
+            }
+
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
+        } catch (JwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("유효하지 않은 토큰입니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("회원 탈퇴 중 오류가 발생했습니다.");
+        }
+    }
+
+    //회원정보수정
+    @PutMapping("/updateUser")
+    public ResponseEntity<String> updateUser(@RequestBody UserRequest userRequest, @RequestHeader("Authorization") String authorization) {
+        try {
+            String token = authorization.substring(7);
+            Long userId = jwtProvider.getUserIdFromToken(token);
+
+            userService.updateUser(userId, userRequest);
+
+            return ResponseEntity.ok("일정이 성공적으로 수정되었습니다.");
+
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
+        } catch (JwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 토큰입니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
+        }
+    }
+
+    //회원정보조회(아이디, 이름)
+    @GetMapping("/me")
+    public ResponseEntity<User> getMyInfo(@RequestHeader("Authorization") String authorization) {
+        try {
+            String token = authorization.substring(7);
+            Long id = jwtProvider.getUserIdFromToken(token);
+
+            User user = userService.findById(id);
+
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
 
 
 

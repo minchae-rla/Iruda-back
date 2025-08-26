@@ -64,4 +64,17 @@ public class User {
         this.providerId = userRequest.providerId();
     }
 
+    public void update(UserRequest userRequest, String encodedPw) {
+        this.userId = userRequest.userId();
+        if (encodedPw != null) {
+            this.userPw = encodedPw;
+        }
+        this.name = userRequest.name();
+        this.phone = userRequest.phone();
+        this.birth = userRequest.birth();
+        this.department = userRequest.department();
+        this.privacyAgree = userRequest.privacyAgree();
+        this.provider = userRequest.provider();
+        this.providerId = userRequest.providerId();
+    }
 }
