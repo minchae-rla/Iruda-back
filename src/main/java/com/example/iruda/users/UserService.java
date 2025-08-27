@@ -2,13 +2,16 @@ package com.example.iruda.users;
 
 import com.example.iruda.jwt.JwtGenerator;
 import com.example.iruda.jwt.JwtTokenDTO;
+import com.example.iruda.tasks.dto.TaskResponse;
 import com.example.iruda.users.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -109,10 +112,21 @@ public class UserService {
 
 
     //내정보조회(이름, 아이디)
-    public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+    public List<UserResponse> findMinimalById(Long id) {
+
+        return userRepository.findMinimalById(id)
+                .stream()
+                .map(UserResponse::fromEntity)
+                .collect(Collectors.toList());
     }
+
+    //전체정보조회
+    public UserResponse findById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        return UserResponse.fromEntity(user);
+    }
+
 }
 
 

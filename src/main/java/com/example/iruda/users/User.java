@@ -49,6 +49,10 @@ public class User {
     @Column
     private String providerId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private UserRole role = UserRole.USER;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProjectMember> projectMembers;
 
@@ -62,6 +66,7 @@ public class User {
         this.privacyAgree = userRequest.privacyAgree();
         this.provider = userRequest.provider();
         this.providerId = userRequest.providerId();
+        this.role = userRequest.role();
     }
 
     public void update(UserRequest userRequest, String encodedPw) {
@@ -76,5 +81,6 @@ public class User {
         this.privacyAgree = userRequest.privacyAgree();
         this.provider = userRequest.provider();
         this.providerId = userRequest.providerId();
+        this.role = userRequest.role();
     }
 }

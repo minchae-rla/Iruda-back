@@ -2,7 +2,6 @@ package com.example.iruda.users;
 
 import com.example.iruda.jwt.JwtProvider;
 import com.example.iruda.jwt.JwtTokenDTO;
-import com.example.iruda.tasks.dto.TaskResponse;
 import com.example.iruda.users.dto.*;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -51,7 +50,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token");
         }
     }
-    
+
     // 아이디 중복 체크
     @PostMapping("/idCheck")
     public ResponseEntity<Boolean> idCheck(@RequestBody UserRequest userRequest) {
@@ -83,7 +82,7 @@ public class UserController {
         }
     }
 
-    
+
     //비밀번호 변경
     @PutMapping("/setPw")
     public ResponseEntity<String> setPw(@RequestBody SetPwRequest setPwRequest) {
@@ -141,20 +140,41 @@ public class UserController {
     }
 
     //회원정보조회(아이디, 이름)
-    @GetMapping("/me")
-    public ResponseEntity<User> getMyInfo(@RequestHeader("Authorization") String authorization) {
+    @GetMapping("/getMinimal")
+    public ResponseEntity<?> getMinimal(@RequestHeader("Authorization") String authorization) {
         try {
             String token = authorization.substring(7);
             Long id = jwtProvider.getUserIdFromToken(token);
 
-            User user = userService.findById(id);
-
+            List<UserResponse> user = userService.findMinimalById(id);
+            System.out.println(user + "안돼?");
             return ResponseEntity.ok(user);
+
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
+        } catch (JwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 토큰입니다.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
         }
     }
 
+    //회원정보전체조회
+    @GetMapping("/getUser")
+    public ResponseEntity<?> getUser(@RequestHeader("Authorization") String authorization) {
+        try {
+            String token = authorization.substring(7);
+            Long id = jwtProvider.getUserIdFromToken(token);
 
+            UserResponse user = userService.findById(id);
+            return ResponseEntity.ok(user);
 
+        } catch (ExpiredJwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
+        } catch (JwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("잘못된 토큰입니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
+        }
+    }
 }

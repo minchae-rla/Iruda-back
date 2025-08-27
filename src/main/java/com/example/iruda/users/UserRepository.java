@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByProviderAndProviderId(String provider, String providerId);
 
-    @Query("SELECT new com.example.iruda.users.dto.UserResponse(u.userId, u.name) " +
-            "FROM User u WHERE u.id = :id")
-    List<User> findMinimalByProviderId(@Param("userId") String userId);
+    @Query("SELECT u.userId, u.name FROM User u WHERE u.id = :userId")
+    List<User> findMinimalById(@Param("userId") Long userId);
+
 }
