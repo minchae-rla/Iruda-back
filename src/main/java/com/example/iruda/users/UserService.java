@@ -112,12 +112,8 @@ public class UserService {
 
 
     //내정보조회(이름, 아이디)
-    public List<UserResponse> findMinimalById(Long id) {
-
-        return userRepository.findMinimalById(id)
-                .stream()
-                .map(UserResponse::fromEntity)
-                .collect(Collectors.toList());
+    public GetMinimal findMinimalById(Long userId) {
+        return userRepository.findMinimalById(userId);
     }
 
     //전체정보조회

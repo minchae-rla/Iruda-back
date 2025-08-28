@@ -144,11 +144,10 @@ public class UserController {
     public ResponseEntity<?> getMinimal(@RequestHeader("Authorization") String authorization) {
         try {
             String token = authorization.substring(7);
-            Long id = jwtProvider.getUserIdFromToken(token);
+            Long userId = jwtProvider.getUserIdFromToken(token);
 
-            List<UserResponse> user = userService.findMinimalById(id);
-            System.out.println(user + "안돼?");
-            return ResponseEntity.ok(user);
+            GetMinimal minimal = userService.findMinimalById(userId);
+            return ResponseEntity.ok(minimal);
 
         } catch (ExpiredJwtException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");

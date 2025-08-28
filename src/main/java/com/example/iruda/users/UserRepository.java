@@ -1,5 +1,6 @@
 package com.example.iruda.users;
 
+import com.example.iruda.users.dto.GetMinimal;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -25,7 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByProviderAndProviderId(String provider, String providerId);
 
-    @Query("SELECT u.userId, u.name FROM User u WHERE u.id = :userId")
-    List<User> findMinimalById(@Param("userId") Long userId);
+    @Query("SELECT new com.example.iruda.users.dto.GetMinimal(u.userId, u.name) FROM User u WHERE u.id = :userId")
+    GetMinimal findMinimalById(@Param("userId") Long userId);
 
 }
