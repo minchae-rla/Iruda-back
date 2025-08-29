@@ -1,9 +1,11 @@
 package com.example.iruda.users;
 
 import com.example.iruda.users.dto.GetMinimal;
+import com.example.iruda.users.dto.GetUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,4 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT new com.example.iruda.users.dto.GetMinimal(u.userId, u.name) FROM User u WHERE u.id = :userId")
     GetMinimal findMinimalById(@Param("userId") Long userId);
 
+    @Query("SELECT new com.example.iruda.users.dto.GetUser(u.userId, u.name, u.phone, u.birth, u.department) FROM User u WHERE u.id = :userId")
+    GetUser findUserById(@Param("userId") Long userId);
 }
