@@ -92,19 +92,19 @@ public class UserService {
         return false;
     }
 
-    //회원정보수정
     @Transactional
-    public void updateUser(Long userId, UserRequest userRequest) {
+    public void updateUser(Long userId, SetUserRequest request) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User Not found"));
 
+        // 비밀번호 변경이 들어왔을 때만 인코딩
         String encodedPw = null;
-        if (userRequest.userPw() != null && !userRequest.userPw().isBlank()) {
-            encodedPw = passwordEncoder.encode(userRequest.userPw());
+        if (request.userPw() != null && !request.userPw().isBlank()) {
+            encodedPw = passwordEncoder.encode(request.userPw());
         }
 
-        user.update(userRequest, encodedPw);
-        userRepository.save(user);
+        user.updateProfile(request, encodedPw);
+
     }
 
 

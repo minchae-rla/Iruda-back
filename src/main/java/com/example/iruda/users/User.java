@@ -2,6 +2,7 @@ package com.example.iruda.users;
 
 import com.example.iruda.projects.ProjectMember;
 import com.example.iruda.users.dto.UserRequest;
+import com.example.iruda.users.dto.SetUserRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,39 +24,40 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String userId;
+    private String userId;  // 로그인 ID (수정 불가)
 
     @Column(nullable = true)
-    private String userPw;
+    private String userPw;  // 비밀번호
 
     @Column(nullable = false)
-    private String name;
+    private String name;    // 이름
 
     @Column(nullable = false)
-    private String phone;
+    private String phone;   // 전화번호
 
     @Column(nullable = false)
-    private String birth;
+    private String birth;   // 생년월일 (수정 불가)
 
     @Column(nullable = false)
-    private String department;
+    private String department; // 소속
 
     @Column(nullable = false)
-    private boolean privacyAgree;
+    private boolean privacyAgree; // 개인정보 동의 (수정 불가)
 
     @Column
-    private String provider;
+    private String provider;  // OAuth 제공자 (수정 불가)
 
     @Column
-    private String providerId;
+    private String providerId; // OAuth provider ID (수정 불가)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role = UserRole.USER;
+    private UserRole role = UserRole.USER; // 권한 (수정 불가)
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProjectMember> projectMembers;
 
+    // 회원가입용 생성자
     public User(UserRequest userRequest, String encryptedPassword) {
         this.userId = userRequest.userId();
         this.userPw = encryptedPassword;
@@ -69,18 +71,19 @@ public class User {
         this.role = userRequest.role();
     }
 
-    public void update(UserRequest userRequest, String encodedPw) {
-        this.userId = userRequest.userId();
+    // 회원정보 수정용 (SetUserRequest 사용)
+    public void updateProfile(SetUserRequest userRequest, String encodedPw) {
         if (encodedPw != null) {
             this.userPw = encodedPw;
         }
-        this.name = userRequest.name();
-        this.phone = userRequest.phone();
-        this.birth = userRequest.birth();
-        this.department = userRequest.department();
-        this.privacyAgree = userRequest.privacyAgree();
-        this.provider = userRequest.provider();
-        this.providerId = userRequest.providerId();
-        this.role = userRequest.role();
+        if (userRequest.name() != null) {
+            this.name = userRequest.name();
+        }
+        if (userRequest.phone() != null) {
+            this.phone = userRequest.phone();
+        }
+        if (userRequest.department() != null) {
+            this.department = userRequest.department();
+        }
     }
 }

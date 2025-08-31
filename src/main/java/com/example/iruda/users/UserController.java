@@ -119,16 +119,17 @@ public class UserController {
         }
     }
 
-    //회원정보수정
+    // 회원정보 수정
     @PutMapping("/updateUser")
-    public ResponseEntity<String> updateUser(@RequestBody UserRequest userRequest, @RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<String> updateUser(@RequestBody SetUserRequest request,
+                                             @RequestHeader("Authorization") String authorization) {
         try {
             String token = authorization.substring(7);
             Long userId = jwtProvider.getUserIdFromToken(token);
 
-            userService.updateUser(userId, userRequest);
+            userService.updateUser(userId, request);
 
-            return ResponseEntity.ok("일정이 성공적으로 수정되었습니다.");
+            return ResponseEntity.ok("회원정보가 성공적으로 수정되었습니다.");
 
         } catch (ExpiredJwtException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("토큰이 만료되었습니다.");
