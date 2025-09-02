@@ -85,14 +85,16 @@ public class UserController {
 
     //비밀번호 변경
     @PutMapping("/setPw")
-    public ResponseEntity<String> setPw(@RequestBody SetPwRequest setPwRequest) {
-        if (setPwRequest.id() == null) {
-            return ResponseEntity.badRequest().body("잘못된 접근입니다.");
-        }
+    public ResponseEntity<String> setPw(@RequestHeader("Authorization") String authorization, @RequestBody SetPwRequest setPwRequest
+    ) {
+        String token = authorization.substring(7);
+        Long userId = jwtProvider.getUserIdFromToken(token);
 
-        userService.setPw(setPwRequest);
-        return ResponseEntity.status(HttpStatus.OK).body("비밀번호가 변경되었습니다.");
+        userService.setPw(userId, setPwRequest);
+
+        return ResponseEntity.ok("비밀번호가 변경되었습니다.");
     }
+
 
 
     // 회원탈퇴
@@ -121,13 +123,12 @@ public class UserController {
 
     // 회원정보 수정
     @PutMapping("/updateUser")
-    public ResponseEntity<String> updateUser(@RequestBody SetUserRequest request,
-                                             @RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<String> updateUser(@RequestBody SetUserRequest userRequest, @RequestHeader("Authorization") String authorization) {
         try {
             String token = authorization.substring(7);
             Long userId = jwtProvider.getUserIdFromToken(token);
 
-            userService.updateUser(userId, request);
+            userService.updateUser(userId, userRequest);
 
             return ResponseEntity.ok("회원정보가 성공적으로 수정되었습니다.");
 

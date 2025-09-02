@@ -2,7 +2,6 @@ package com.example.iruda.users;
 
 import com.example.iruda.projects.ProjectMember;
 import com.example.iruda.users.dto.UserRequest;
-import com.example.iruda.users.dto.SetUserRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -69,21 +68,5 @@ public class User {
         this.provider = userRequest.provider();
         this.providerId = userRequest.providerId();
         this.role = userRequest.role();
-    }
-
-    // 회원정보 수정용 (SetUserRequest 사용)
-    public void updateProfile(SetUserRequest userRequest, String encodedPw) {
-        if (encodedPw != null) {
-            this.userPw = encodedPw;
-        }
-        if (userRequest.name() != null) {
-            this.name = userRequest.name();
-        }
-        if (userRequest.phone() != null) {
-            this.phone = userRequest.phone();
-        }
-        if (userRequest.department() != null) {
-            this.department = userRequest.department();
-        }
     }
 }

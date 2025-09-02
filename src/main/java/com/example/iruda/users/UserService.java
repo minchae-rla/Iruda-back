@@ -74,13 +74,13 @@ public class UserService {
 
     //비밀번호 변경
     @Transactional
-    public void setPw(SetPwRequest setPwRequest) {
-        User user = userRepository.findById(setPwRequest.id())
-                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
-
+    public void setPw(Long userId, SetPwRequest setPwRequest) {
         String encodedPw = passwordEncoder.encode(setPwRequest.userPw());
-        user.setUserPw(encodedPw);
-        userRepository.save(user);
+        int updated = userRepository.updatePassword(userId, encodedPw);
+
+        if (updated == 0) {
+            throw new IllegalArgumentException("해당 사용자를 찾을 수 없습니다.");
+        }
     }
 
     // 회원 탈퇴
@@ -92,19 +92,20 @@ public class UserService {
         return false;
     }
 
+    
+    
+    //회원정보수정
     @Transactional
-    public void updateUser(Long userId, SetUserRequest request) {
+    public void updateUser(Long userId, SetUserRequest userRequest) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User Not found"));
 
-        // 비밀번호 변경이 들어왔을 때만 인코딩
-        String encodedPw = null;
-        if (request.userPw() != null && !request.userPw().isBlank()) {
-            encodedPw = passwordEncoder.encode(request.userPw());
-        }
+        if (userRequest.name() != null) user.setName(userRequest.name());
+        if (userRequest.phone() != null) user.setPhone(userRequest.phone());
+        if (userRequest.department() != null) user.setDepartment(userRequest.department());
+        if (userRequest.userPw() != null) user.setUserPw(passwordEncoder.encode(userRequest.userPw()));
 
-        user.updateProfile(request, encodedPw);
-
+        userRepository.save(user);
     }
 
 
