@@ -74,8 +74,8 @@ public class UserService {
 
     //비밀번호 변경
     @Transactional
-    public void setPw(Long userId, SetPwRequest setPwRequest) {
-        String encodedPw = passwordEncoder.encode(setPwRequest.userPw());
+    public void setPw(Long userId, SetPwRequest request) {
+        String encodedPw = passwordEncoder.encode(request.userPw());
         int updated = userRepository.updatePassword(userId, encodedPw);
 
         if (updated == 0) {
@@ -97,17 +97,24 @@ public class UserService {
     //회원정보수정
     @Transactional
     public void updateUser(Long userId, SetUserRequest userRequest) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User Not found"));
+        String encodedPw = null;
 
-        if (userRequest.name() != null) user.setName(userRequest.name());
-        if (userRequest.phone() != null) user.setPhone(userRequest.phone());
-        if (userRequest.department() != null) user.setDepartment(userRequest.department());
-        if (userRequest.userPw() != null) user.setUserPw(passwordEncoder.encode(userRequest.userPw()));
+        if (userRequest.userPw() != null && !userRequest.userPw().isBlank()) {
+            encodedPw = passwordEncoder.encode(userRequest.userPw());
+        }
 
-        userRepository.save(user);
+        SetUserRequest updatedReq = new SetUserRequest(
+                userRequest.name(),
+                encodedPw,
+                userRequest.department(),
+                userRequest.phone()
+        );
+
+        int result = userRepository.updateUser(userId, updatedReq);
+        if (result == 0) {
+            throw new IllegalArgumentException("User not found: " + userId);
+        }
     }
-
 
     //내정보조회(이름, 아이디)
     public GetMinimal findMinimalById(Long userId) {

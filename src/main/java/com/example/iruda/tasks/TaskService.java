@@ -6,8 +6,10 @@ import com.example.iruda.tasks.dto.TaskRequest;
 import com.example.iruda.tasks.dto.TaskResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,10 +39,9 @@ public class TaskService {
 
     //일정 전체 조회
     public List<TaskResponse> allTasks(Long userId) {
-
         return taskRepository.findAllByUserId(userId)
                 .stream()
-                .map(TaskResponse::fromEntity)
+                .map(TaskResponse::fromEntity) // 문자열 yyyy-MM-dd 반환
                 .collect(Collectors.toList());
     }
 
@@ -100,10 +101,25 @@ public class TaskService {
 
     //일정 알람
     public List<TaskResponse> getAlarm(Long userId) {
-        List<Task> tasks = taskRepository.findTodayAlarmsByUserId(userId);
+        LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.plusDays(1).atStartOfDay();
+
+        List<Task> tasks = taskRepository.findTodayAlarmsByUserId(userId, startOfDay, endOfDay);
+
         return tasks.stream()
                 .map(TaskResponse::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    //알람 읽음 처리
+    @Transactional
+    public void markAlarmsAsRead(Long userId, List<Long> taskIds) {
+        List<Task> tasks = taskRepository.findByIdInAndUserId(taskIds, userId);
+        for (Task task : tasks) {
+            task.setReadAlarm(true);
+        }
+        taskRepository.saveAll(tasks); // 안전하게 DB 반영
     }
 
 

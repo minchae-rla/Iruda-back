@@ -2,6 +2,7 @@ package com.example.iruda.users;
 
 import com.example.iruda.users.dto.GetMinimal;
 import com.example.iruda.users.dto.GetUser;
+import com.example.iruda.users.dto.SetUserRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -37,7 +38,15 @@ public interface UserRepository extends JpaRepository<User, Long> {
     GetUser findUserById(@Param("userId") Long userId);
 
     @Modifying
-    @Transactional
-    @Query("update User u set u.userPw = :userPw where u.id = :userId")
-    int updatePassword(@Param("userId") Long userId, @Param("userPw") String userPw);
+    @Query("UPDATE User u SET u.userPw = :password WHERE u.id = :id")
+    int updatePassword(@Param("id") Long id, @Param("password") String password);
+
+    @Modifying
+    @Query("UPDATE User u SET " +
+            "u.name = COALESCE(:#{#req.name}, u.name), " +
+            "u.phone = COALESCE(:#{#req.phone}, u.phone), " +
+            "u.department = COALESCE(:#{#req.department}, u.department), " +
+            "u.userPw = COALESCE(:#{#req.userPw}, u.userPw) " +
+            "WHERE u.id = :userId")
+    int updateUser(@Param("userId") Long userId, @Param("req") SetUserRequest req);
 }

@@ -103,6 +103,7 @@ public class TaskController {
             String token = authorization.substring(7);
             Long userId = jwtProvider.getUserIdFromToken(token);
 
+            // TaskResponse가 문자열 날짜를 반환하도록 변경됨
             List<TaskResponse> task = taskService.allTasks(userId);
             return ResponseEntity.ok(task);
 
@@ -244,6 +245,25 @@ public class TaskController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
+        }
+    }
+
+    //알람읽음처리
+    @PutMapping("/readAlarm")
+    public ResponseEntity<Void> readAlarm(
+            @RequestHeader("Authorization") String authorization,
+            @RequestBody List<Long> taskIds) {
+        try {
+            String token = authorization.substring(7);
+            Long userId = jwtProvider.getUserIdFromToken(token);
+
+            taskService.markAlarmsAsRead(userId, taskIds);
+
+            return ResponseEntity.ok().build();
+        } catch (JwtException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 

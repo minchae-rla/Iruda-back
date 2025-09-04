@@ -2,26 +2,35 @@ package com.example.iruda.tasks.dto;
 
 import com.example.iruda.tasks.Task;
 
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 public record TaskResponse(
         Long id,
         String title,
         String content,
-        Date startDate,
-        Date endDate,
+        String startDate,
+        String endDate,
         String alarmSet,
-        String color
+        String color,
+        boolean readAlarm
 ) {
     public static TaskResponse fromEntity(Task task) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        ZoneId zone = ZoneId.of("Asia/Seoul");
+
+        String start = task.getStartDate().toInstant().atZone(zone).toLocalDate().format(formatter);
+        String end = task.getEndDate().toInstant().atZone(zone).toLocalDate().format(formatter);
+
         return new TaskResponse(
                 task.getId(),
                 task.getTitle(),
                 task.getContent(),
-                task.getStartDate(),
-                task.getEndDate(),
+                start,
+                end,
                 task.getAlarmSet(),
-                task.getColor()
+                task.getColor(),
+                task.isReadAlarm()
         );
     }
 }
