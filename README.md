@@ -7,6 +7,6 @@
 
  ## 🗡Skill
  - **JAVA 17.0.10**
- - **BACK : JWT, JPA, Spring Boot
- - **FRONT : React@vite, TypeScript, TailwindCSS
+ - **BACK : JWT, JPA, Spring Boot**
+ - **FRONT : React@vite, TypeScript, TailwindCSS**
  - **DataBase : PostgreSQL**
