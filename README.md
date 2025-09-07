@@ -5,7 +5,7 @@
 
 - 사용자는 캘린더를 통해 일정을 등록, 수정, 삭제할 수 있으며, 프로젝트별 일정 관리와 알람 기능 등을 활용하여 효율적인 일정 관리를 경험할 수 있습니다.
 
- ## 🗡Skill
+ ## 사용기술
  - **JAVA 17.0.10**
  - **BACK : JWT, JPA, Spring Boot**
  - **FRONT : React@vite, TypeScript, TailwindCSS**
