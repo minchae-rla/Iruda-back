@@ -16,5 +16,5 @@
 <br>
 
  ## 구현화면
-https://github.com/user-attachments/assets/bae5e5c3-f748-40f8-9afd-bfb6a52002ac
+https://github.com/user-attachments/assets/c656e9bc-67ee-4c79-a167-02b0ce5329e6
 
