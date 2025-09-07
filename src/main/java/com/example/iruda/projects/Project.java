@@ -23,11 +23,10 @@ public class Project {
     @Column(nullable = false)
     private String name;
 
-    //관계설정(실제컬럼X, 추후 조회 등을 사용할때 편리)
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProjectMember> projectMembers;
 
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Task> task;
 
     public Project(ProjectRequest projectRequest) {

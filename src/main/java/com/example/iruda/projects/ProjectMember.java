@@ -27,7 +27,7 @@ public class ProjectMember {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private ProjectPosition projectPosition;  // 역할
+    private ProjectPosition projectPosition;
 
     public ProjectMember(Project project, User user, ProjectPosition projectPosition) {
         this.project = project;

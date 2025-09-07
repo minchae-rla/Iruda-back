@@ -71,7 +71,6 @@ public class Task {
         this.createDate = new Date();
         this.updateDate = new Date();
         this.readAlarm = false;
-
     }
 
     public void update(TaskRequest taskRequest, Project project) {

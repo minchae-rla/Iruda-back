@@ -69,12 +69,13 @@ public class ProjectController {
 
 
     // 프로젝트 삭제
-    @DeleteMapping("/delete/{projectId}")
-    public ResponseEntity<String> deleteProject(@PathVariable Long projectId, @RequestHeader("Authorization") String authorization) {
+    @DeleteMapping("/deleteProject")
+    public ResponseEntity<String> deleteProject(@RequestBody ProjectRequest projectRequest,
+                                                @RequestHeader("Authorization") String authorization) {
         try {
-            String token = authorization.substring(7);  // "Bearer "를 제거하여 토큰만 추출
-
+            String token = authorization.substring(7);
             Long userId = jwtProvider.getUserIdFromToken(token);
+            Long projectId = projectRequest.projectId();
 
             boolean projectUserCheck = projectService.projectUserCheck(userId, projectId);
             boolean leaderCheck = projectService.leaderCheck(userId, projectId);
@@ -82,8 +83,8 @@ public class ProjectController {
             if (!projectUserCheck && !leaderCheck) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이 프로젝트를 삭제할 권한이 없습니다.");
             }
-            projectService.deleteProject(projectId);
 
+            projectService.deleteProject(projectId);
             return ResponseEntity.ok("프로젝트가 성공적으로 삭제되었습니다.");
 
         } catch (ExpiredJwtException e) {
@@ -96,20 +97,21 @@ public class ProjectController {
     }
 
 
-    //프로젝트 수정
-    @PutMapping("/update/{projectId}")
-    public ResponseEntity<String> updateProject(@PathVariable Long projectId, @RequestBody ProjectRequest projectRequest, @RequestHeader("Authorization") String authorization) {
+    // 프로젝트 제목 수정
+    @PutMapping("/updateProject")
+    public ResponseEntity<String> updateProject(@RequestBody ProjectRequest projectRequest, @RequestHeader("Authorization") String authorization) {
         try {
             String token = authorization.substring(7);
+            Long userId = jwtProvider.getUserIdFromToken(token);
 
-            long userId = jwtProvider.getUserIdFromToken(token);
-
+            Long projectId = projectRequest.projectId();
             boolean projectUserCheck = projectService.projectUserCheck(userId, projectId);
+
             if (!projectUserCheck) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("이 프로젝트를 수정할 권한이 없습니다.");
             }
-            projectService.updateProject(projectId, projectRequest);
 
+            projectService.updateProject(projectId, projectRequest);
             return ResponseEntity.ok("프로젝트가 성공적으로 수정되었습니다.");
 
         } catch (ExpiredJwtException e) {
@@ -119,7 +121,6 @@ public class ProjectController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body("권한이 없습니다.");
         }
-
     }
 
 

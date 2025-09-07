@@ -23,40 +23,39 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String userId;  // 로그인 ID (수정 불가)
+    private String userId;
 
     @Column(nullable = true)
-    private String userPw;  // 비밀번호
+    private String userPw;
 
     @Column(nullable = false)
-    private String name;    // 이름
+    private String name;
 
     @Column(nullable = false)
-    private String phone;   // 전화번호
+    private String phone;
 
     @Column(nullable = false)
-    private String birth;   // 생년월일 (수정 불가)
+    private String birth;
 
     @Column(nullable = false)
-    private String department; // 소속
+    private String department;
 
     @Column(nullable = false)
-    private boolean privacyAgree; // 개인정보 동의 (수정 불가)
+    private boolean privacyAgree;
 
     @Column
-    private String provider;  // OAuth 제공자 (수정 불가)
+    private String provider;
 
     @Column
-    private String providerId; // OAuth provider ID (수정 불가)
+    private String providerId;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole role = UserRole.USER; // 권한 (수정 불가)
+    private UserRole role = UserRole.USER;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ProjectMember> projectMembers;
 
-    // 회원가입용 생성자
     public User(UserRequest userRequest, String encryptedPassword) {
         this.userId = userRequest.userId();
         this.userPw = encryptedPassword;

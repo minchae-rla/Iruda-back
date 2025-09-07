@@ -31,12 +31,16 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<JwtTokenDTO> login(@RequestBody UserRequest.login loginRequest) {
         JwtTokenDTO tokenDTO = userService.login(loginRequest);
+        if (tokenDTO != null) return ResponseEntity.ok(tokenDTO);
+        return ResponseEntity.status(401).body(null);
+    }
 
-        if (tokenDTO != null) {
-            return ResponseEntity.ok(tokenDTO); // 로그인 성공 시 JWT 토큰 반환
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null); // 로그인 실패 시
-        }
+    //로그인유지확인
+    @PostMapping("/reissue")
+    public ResponseEntity<JwtTokenDTO> reissue(@RequestBody String refreshToken) {
+        System.out.println("자동로그인되는지확인");
+        JwtTokenDTO tokenDTO = userService.reissue(refreshToken);
+        return ResponseEntity.ok(tokenDTO);
     }
 
     // JWT 토큰을 사용하여 사용자를 인증하는 예시 (인증된 API 호출 시 사용)
@@ -95,7 +99,7 @@ public class UserController {
     @DeleteMapping("/deleteUser")
     public ResponseEntity<String> deleteUser(@RequestHeader("Authorization") String authorization) {
         try {
-            String token = authorization.substring(7); // "Bearer " 제거
+            String token = authorization.substring(7);
             Long userId = jwtProvider.getUserIdFromToken(token);
 
             boolean deleted = userService.deleteUser(userId);

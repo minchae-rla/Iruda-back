@@ -2,12 +2,23 @@ package com.example.iruda.users;
 
 import com.example.iruda.jwt.JwtGenerator;
 import com.example.iruda.jwt.JwtTokenDTO;
+import com.example.iruda.jwt.RefreshTokenRepository;
+import com.example.iruda.jwt.dto.RefreshToken;
+import com.example.iruda.projects.Project;
+import com.example.iruda.projects.ProjectMember;
+import com.example.iruda.projects.ProjectMemberRepository;
+import com.example.iruda.projects.ProjectRepository;
+import com.example.iruda.tasks.Task;
+import com.example.iruda.tasks.TaskRepository;
 import com.example.iruda.users.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -16,6 +27,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final ProjectRepository projectRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtGenerator jwtGenerator; // JwtGenerator 의존성 주입
 
     // 일반 회원가입
@@ -33,13 +46,40 @@ public class UserService {
     }
 
     // 로그인 처리 및 JWT 토큰 발급
+    @Transactional
     public JwtTokenDTO login(UserRequest.login loginRequest) {
         User user = userRepository.findByUserId(loginRequest.userId());
         if (user != null && passwordEncoder.matches(loginRequest.userPw(), user.getUserPw())) {
-            // 로그인 성공 시 JWT 토큰 (accessToken, refreshToken) 생성
-            return jwtGenerator.generateToken(user.getId());  // user.getId() 대신 user.getUserId() 사용
+            JwtTokenDTO tokenDTO = jwtGenerator.generateToken(user.getId());
+            refreshTokenRepository.save(new RefreshToken(
+                    user.getId(),
+                    tokenDTO.getRefreshToken(),
+                    LocalDateTime.now().plusDays(7)
+            ));
+            return tokenDTO;
         }
-        return null; // 인증 실패 시 null 반환
+        return null;
+    }
+
+    //로그인유지확인
+    @Transactional
+    public JwtTokenDTO reissue(String refreshToken) {
+        Optional<RefreshToken> findToken = refreshTokenRepository.findByToken(refreshToken);
+        if (findToken.isEmpty()) throw new IllegalArgumentException("Invalid refresh token");
+
+        RefreshToken storedToken = findToken.get();
+        if (storedToken.getExpiryDate().isBefore(LocalDateTime.now())) {
+            refreshTokenRepository.delete(storedToken);
+            throw new IllegalArgumentException("Refresh token expired");
+        }
+
+        Long userId = storedToken.getUserId();
+        JwtTokenDTO newTokens = jwtGenerator.generateToken(userId);
+        storedToken.setToken(newTokens.getRefreshToken());
+        storedToken.setExpiryDate(LocalDateTime.now().plusDays(7));
+        refreshTokenRepository.save(storedToken);
+
+        return newTokens;
     }
 
     //아이디 중복 체크
@@ -84,14 +124,24 @@ public class UserService {
     }
 
     // 회원 탈퇴
+    @Transactional
     public boolean deleteUser(Long userId) {
-        if (userRepository.existsById(userId)) {  // 존재 여부 확인
-            userRepository.deleteById(userId);
-            return true;
-        }
-        return false;
-    }
+        Optional<User> userOpt = userRepository.findById(userId);
+        if (userOpt.isEmpty()) return false;
 
+        User user = userOpt.get();
+
+        List<ProjectMember> memberships = user.getProjectMembers();
+
+        for (ProjectMember pm : memberships) {
+            Project project = pm.getProject();
+            projectRepository.delete(project);
+        }
+
+        userRepository.delete(user);
+
+        return true;
+    }
     
     
     //회원정보수정

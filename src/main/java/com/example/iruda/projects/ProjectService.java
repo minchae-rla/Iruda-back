@@ -56,14 +56,7 @@ public class ProjectService {
     // 프로젝트 삭제
     public void deleteProject(Long projectId) {
         Project project = projectRepository.findById(projectId)
-                .orElseThrow(() -> new RuntimeException("프로젝트를 찾을 수 없습니다."));
-
-        List<ProjectMember> projectMembers = projectMemberRepository.findAllByProjectId(projectId);
-        projectMemberRepository.deleteAll(projectMembers);
-
-        List<Task> projectDetails = taskRepository.findAllByProjectId(projectId);
-        taskRepository.deleteAll(projectDetails);
-
+                .orElseThrow(() -> new IllegalArgumentException("Project not found"));
         projectRepository.delete(project);
     }
 
@@ -73,7 +66,6 @@ public class ProjectService {
                 .orElseThrow(() -> new IllegalArgumentException("Project not found"));
 
         project.update(projectRequest);
-
         projectRepository.save(project);
     }
 
