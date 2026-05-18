@@ -119,22 +119,19 @@ JWT 인증, 자동 로그인, 카카오 회원가입 및 로그인, 프로젝트
 
 ---
 
-# 🧩 프로젝트 구조
+# 📷 구현 화면 및 시연 영상
 
-```bash
-IRUDA
- ┣ backend
- ┃ ┣ domain
- ┃ ┣ auth
- ┃ ┣ config
- ┃ ┣ repository
- ┃ ┗ service
- ┃
- ┣ frontend
- ┃ ┣ components
- ┃ ┣ pages
- ┃ ┣ hooks
- ┃ ┣ api
- ┃ ┗ store
- ┃
- ┗ database
+## 🎥 프로젝트 시연 영상
+
+<div align="center">
+
+<a href="https://github.com/user-attachments/assets/9a358391-ee4c-4485-a3e3-a6bee06682d6">
+    <img src="https://github.com/user-attachments/assets/캡쳐이미지주소"
+    width="80%" />
+</a>
+
+<br>
+
+👉 이미지를 클릭하면 시연 영상을 확인할 수 있습니다.
+
+</div>
